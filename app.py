@@ -13,7 +13,7 @@ import streamlit as st
 from common import birth_details_form, get_chart
 from styling import badge, card, inject_theme
 from vedic_astro.constants import SUN, VENUS
-from vedic_astro.dasha import mahadasha_periods_for_lords
+from vedic_astro.dasha import DASHA_OVERVIEW_BLURB, current_dasha, mahadasha_periods_for_lords
 from vedic_astro.transits import (
     GURU_GOCHAR_OVERVIEW_BLURB,
     SADE_SATI_OVERVIEW_BLURB,
@@ -112,6 +112,25 @@ def _render_guru_gochar(chart) -> None:
         )
 
 
+def _render_current_dasha(chart) -> None:
+    moon_longitude = chart.planets["Moon"].longitude
+    status = current_dasha(chart.birth_datetime_utc, moon_longitude)
+    now = datetime.now(timezone.utc)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        card("Mahadasha", status.mahadasha.lord)
+        st.caption(f"{status.mahadasha.start.date()} → {status.mahadasha.end.date()}")
+    with col2:
+        card("Antardasha", status.antardasha.lord)
+        st.caption(f"{status.antardasha.start.date()} → {status.antardasha.end.date()}")
+
+    st.caption(DASHA_OVERVIEW_BLURB)
+
+    remaining = status.antardasha.end - now
+    st.caption(f"Current antardasha ends around {status.antardasha.end.date()} (~{_format_timedelta_years_months(remaining)} from now)")
+
+
 def _render_mahadasha(chart) -> None:
     moon_longitude = chart.planets["Moon"].longitude
     periods = mahadasha_periods_for_lords(chart.birth_datetime_utc, moon_longitude, [SUN, VENUS])
@@ -140,8 +159,8 @@ if chart:
     st.divider()
     st.caption(f"{place.address} · {place.timezone} · Ayanamsa: {chart.ayanamsa}")
 
-    tab_natal, tab_sade_sati, tab_guru_gochar, tab_mahadasha = st.tabs(
-        ["Natal Chart", "Sade Sati", "Guru Gochar", "Sun & Venus Mahadasha"]
+    tab_natal, tab_sade_sati, tab_guru_gochar, tab_current_dasha, tab_mahadasha = st.tabs(
+        ["Natal Chart", "Sade Sati", "Guru Gochar", "Current Dasha", "Sun & Venus Mahadasha"]
     )
     with tab_natal:
         _render_natal_chart(chart)
@@ -149,6 +168,8 @@ if chart:
         _render_sade_sati(chart)
     with tab_guru_gochar:
         _render_guru_gochar(chart)
+    with tab_current_dasha:
+        _render_current_dasha(chart)
     with tab_mahadasha:
         _render_mahadasha(chart)
 else:

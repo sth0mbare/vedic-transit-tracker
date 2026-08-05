@@ -19,6 +19,13 @@ DAYS_PER_YEAR = 365.2425  # Gregorian mean year; standard approximation for dash
 
 MAX_MAHADASHA_ENTRIES = 30  # ~3+ full 120-year cycles worth of entries, generous safety cap
 
+DASHA_OVERVIEW_BLURB = (
+    "Vimshottari Dasha divides a 120-year cycle into planetary mahadashas "
+    "(major periods) and antardashas (sub-periods within them), fixed by your "
+    "Moon's position at birth -- a common framework for timing predictions "
+    "in Vedic astrology."
+)
+
 
 @dataclass
 class DashaPeriod:
