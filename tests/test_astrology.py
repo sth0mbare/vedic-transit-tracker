@@ -18,7 +18,8 @@ from datetime import datetime, timezone
 import pytest
 
 from vedic_astro.chart import compute_natal_chart
-from vedic_astro.dasha import current_dasha
+from vedic_astro.constants import SUN, VENUS
+from vedic_astro.dasha import current_dasha, mahadasha_periods_for_lords
 from vedic_astro.transits import compute_sade_sati, compute_transits
 
 PUNE_LAT, PUNE_LON = 18.5213738, 73.8545071
@@ -71,6 +72,16 @@ def test_antardasha_falls_within_mahadasha(natal_chart):
     status = current_dasha(BIRTH_DT, moon_longitude, at_dt=BIRTH_DT)
     assert status.mahadasha.start <= status.antardasha.start
     assert status.antardasha.end <= status.mahadasha.end
+
+
+def test_sun_venus_mahadasha_periods(natal_chart):
+    moon_longitude = natal_chart.planets["Moon"].longitude
+    periods = mahadasha_periods_for_lords(BIRTH_DT, moon_longitude, [SUN, VENUS])
+
+    assert periods[SUN].start.date().isoformat() == "1988-01-07"
+    assert periods[SUN].end.date().isoformat() == "1994-01-06"
+    assert periods[VENUS].start.date().isoformat() == "2088-01-06"
+    assert periods[VENUS].end.date().isoformat() == "2108-01-07"
 
 
 def test_sade_sati_active_at_birth(natal_chart):

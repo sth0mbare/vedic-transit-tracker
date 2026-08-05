@@ -87,6 +87,24 @@ def _antardasha_sequence(mahadasha: DashaPeriod) -> list[DashaPeriod]:
     return periods
 
 
+def mahadasha_periods_for_lords(
+    birth_dt_utc: datetime, moon_longitude: float, lords: list[str]
+) -> dict[str, DashaPeriod]:
+    """The single mahadasha span for each requested lord.
+
+    Each of the 9 grahas rules exactly one mahadasha per 120-year
+    Vimshottari cycle, and the true cycle start is never more than one
+    lord's full period (at most 20 years, Venus) before birth -- so a
+    121-year search window from birth is always enough to find all of them.
+    """
+    until_dt = birth_dt_utc + _years_to_timedelta(121)
+    periods = _mahadasha_sequence(birth_dt_utc, moon_longitude, until_dt=until_dt)
+    by_lord: dict[str, DashaPeriod] = {}
+    for p in periods:
+        by_lord.setdefault(p.lord, p)  # keep the first (earliest) occurrence of each lord
+    return {lord: by_lord[lord] for lord in lords}
+
+
 def current_dasha(
     birth_dt_utc: datetime, moon_longitude: float, at_dt: datetime | None = None
 ) -> DashaStatus:
