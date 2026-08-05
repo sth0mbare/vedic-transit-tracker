@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 
 import pandas as pd
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 
 from common import birth_details_form, get_chart
 from styling import badge, card, inject_theme
@@ -20,8 +21,11 @@ from vedic_astro.transits import (
     SADE_SATI_PHASE_BLURBS,
     compute_guru_gochar,
     compute_sade_sati,
+    compute_transits,
 )
 from vedic_astro.util import rashi_display_name
+
+LIVE_TRANSITS_REFRESH_MS = 30_000
 
 st.set_page_config(page_title="Vedic Transit & Dasha Calculator", page_icon="🪐", layout="centered")
 inject_theme()
@@ -57,6 +61,26 @@ def _render_natal_chart(chart) -> None:
             "Retrograde": "Yes" if p.retrograde else "",
         }
         for name, p in chart.planets.items()
+    ]
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+
+
+def _render_live_transits(chart) -> None:
+    st_autorefresh(interval=LIVE_TRANSITS_REFRESH_MS, key="live_transits_autorefresh")
+
+    now = datetime.now(timezone.utc)
+    st.caption(f"Live · last updated {now.strftime('%H:%M:%S')} UTC · refreshes every 30s")
+
+    transits = compute_transits(chart, at_dt=now, ayanamsa_name=chart.ayanamsa)
+    rows = [
+        {
+            "Graha": name,
+            "Rashi": rashi_display_name(t.rashi),
+            "House (from Moon)": t.house_from_moon,
+            "House (from Lagna)": t.house_from_lagna,
+            "Retrograde": "Yes" if t.retrograde else "",
+        }
+        for name, t in transits.items()
     ]
     st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
 
@@ -173,11 +197,13 @@ if chart:
     st.divider()
     st.caption(f"{place.address} · {place.timezone} · Ayanamsa: {chart.ayanamsa}")
 
-    tab_natal, tab_sade_sati, tab_guru_gochar, tab_current_dasha, tab_mahadasha = st.tabs(
-        ["Natal Chart", "Sade Sati", "Guru Gochar", "Current Dasha", "Sun & Venus Mahadasha"]
+    tab_natal, tab_live, tab_sade_sati, tab_guru_gochar, tab_current_dasha, tab_mahadasha = st.tabs(
+        ["Natal Chart", "Live Transits", "Sade Sati", "Guru Gochar", "Current Dasha", "Sun & Venus Mahadasha"]
     )
     with tab_natal:
         _render_natal_chart(chart)
+    with tab_live:
+        _render_live_transits(chart)
     with tab_sade_sati:
         _render_sade_sati(chart)
     with tab_guru_gochar:

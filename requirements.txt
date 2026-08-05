@@ -3,3 +3,4 @@ pyswisseph
 geopy
 timezonefinder
 pandas
+streamlit-autorefresh
