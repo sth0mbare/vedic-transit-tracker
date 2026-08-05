@@ -24,11 +24,13 @@ hr {
     border-color: rgba(217, 180, 90, 0.25) !important;
 }
 
-/* Starfield + nebula background: a few tiled star-dot layers for scattered
-   stars, plus large soft blurred blobs for nebula-cloud color. */
+/* Starfield + nebula background: hand-drawn constellation lines on top,
+   a few tiled star-dot layers for scattered stars, plus large soft
+   blurred blobs for nebula-cloud color. */
 .stApp {
     background-color: #05050d !important;
     background-image:
+        url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22900%22%3E%0A%3Cg%20stroke%3D%22rgba%28230%2C225%2C255%2C0.4%29%22%20stroke-width%3D%221%22%20fill%3D%22rgba%28255%2C255%2C255%2C0.9%29%22%3E%0A%3Cline%20x1%3D%2260%22%20y1%3D%2280%22%20x2%3D%22120%22%20y2%3D%2260%22/%3E%0A%3Cline%20x1%3D%22120%22%20y1%3D%2260%22%20x2%3D%22180%22%20y2%3D%2290%22/%3E%0A%3Cline%20x1%3D%22180%22%20y1%3D%2290%22%20x2%3D%22230%22%20y2%3D%2270%22/%3E%0A%3Cline%20x1%3D%22230%22%20y1%3D%2270%22%20x2%3D%22210%22%20y2%3D%22130%22/%3E%0A%3Ccircle%20cx%3D%2260%22%20cy%3D%2280%22%20r%3D%222%22/%3E%0A%3Ccircle%20cx%3D%22120%22%20cy%3D%2260%22%20r%3D%222.6%22/%3E%0A%3Ccircle%20cx%3D%22180%22%20cy%3D%2290%22%20r%3D%222%22/%3E%0A%3Ccircle%20cx%3D%22230%22%20cy%3D%2270%22%20r%3D%222.6%22/%3E%0A%3Ccircle%20cx%3D%22210%22%20cy%3D%22130%22%20r%3D%222%22/%3E%0A%3Cline%20x1%3D%22520%22%20y1%3D%22210%22%20x2%3D%22580%22%20y2%3D%22270%22/%3E%0A%3Cline%20x1%3D%22580%22%20y1%3D%22270%22%20x2%3D%22500%22%20y2%3D%22310%22/%3E%0A%3Cline%20x1%3D%22500%22%20y1%3D%22310%22%20x2%3D%22520%22%20y2%3D%22210%22/%3E%0A%3Ccircle%20cx%3D%22520%22%20cy%3D%22210%22%20r%3D%222%22/%3E%0A%3Ccircle%20cx%3D%22580%22%20cy%3D%22270%22%20r%3D%222.6%22/%3E%0A%3Ccircle%20cx%3D%22500%22%20cy%3D%22310%22%20r%3D%222%22/%3E%0A%3Cline%20x1%3D%22650%22%20y1%3D%22520%22%20x2%3D%22690%22%20y2%3D%22560%22/%3E%0A%3Cline%20x1%3D%22690%22%20y1%3D%22560%22%20x2%3D%22720%22%20y2%3D%22520%22/%3E%0A%3Cline%20x1%3D%22720%22%20y1%3D%22520%22%20x2%3D%22760%22%20y2%3D%22560%22/%3E%0A%3Cline%20x1%3D%22760%22%20y1%3D%22560%22%20x2%3D%22800%22%20y2%3D%22530%22/%3E%0A%3Ccircle%20cx%3D%22650%22%20cy%3D%22520%22%20r%3D%222%22/%3E%0A%3Ccircle%20cx%3D%22690%22%20cy%3D%22560%22%20r%3D%222.6%22/%3E%0A%3Ccircle%20cx%3D%22720%22%20cy%3D%22520%22%20r%3D%222%22/%3E%0A%3Ccircle%20cx%3D%22760%22%20cy%3D%22560%22%20r%3D%222.6%22/%3E%0A%3Ccircle%20cx%3D%22800%22%20cy%3D%22530%22%20r%3D%222%22/%3E%0A%3Cline%20x1%3D%22100%22%20y1%3D%22680%22%20x2%3D%22160%22%20y2%3D%22730%22/%3E%0A%3Cline%20x1%3D%22160%22%20y1%3D%22730%22%20x2%3D%22140%22%20y2%3D%22790%22/%3E%0A%3Cline%20x1%3D%22140%22%20y1%3D%22790%22%20x2%3D%2280%22%20y2%3D%22810%22/%3E%0A%3Ccircle%20cx%3D%22100%22%20cy%3D%22680%22%20r%3D%222%22/%3E%0A%3Ccircle%20cx%3D%22160%22%20cy%3D%22730%22%20r%3D%222.6%22/%3E%0A%3Ccircle%20cx%3D%22140%22%20cy%3D%22790%22%20r%3D%222%22/%3E%0A%3Ccircle%20cx%3D%2280%22%20cy%3D%22810%22%20r%3D%222%22/%3E%0A%3Cline%20x1%3D%22820%22%20y1%3D%22720%22%20x2%3D%22860%22%20y2%3D%22770%22/%3E%0A%3Cline%20x1%3D%22860%22%20y1%3D%22770%22%20x2%3D%22810%22%20y2%3D%22800%22/%3E%0A%3Ccircle%20cx%3D%22820%22%20cy%3D%22720%22%20r%3D%222%22/%3E%0A%3Ccircle%20cx%3D%22860%22%20cy%3D%22770%22%20r%3D%222.6%22/%3E%0A%3Ccircle%20cx%3D%22810%22%20cy%3D%22800%22%20r%3D%222%22/%3E%0A%3C/g%3E%0A%3C/svg%3E"),
         radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.85), transparent),
         radial-gradient(1px 1px at 90px 120px, rgba(255, 255, 255, 0.6), transparent),
         radial-gradient(1.5px 1.5px at 160px 60px, rgba(255, 255, 255, 0.75), transparent),
@@ -39,8 +41,8 @@ hr {
         radial-gradient(ellipse 900px 550px at 15% 15%, rgba(160, 120, 170, 0.32), transparent 65%),
         radial-gradient(ellipse 750px 650px at 85% 55%, rgba(200, 140, 100, 0.26), transparent 65%),
         radial-gradient(ellipse 650px 550px at 45% 95%, rgba(100, 110, 175, 0.28), transparent 65%) !important;
-    background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat !important;
-    background-size: 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, auto, auto, auto !important;
+    background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat !important;
+    background-size: 900px 900px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, auto, auto, auto !important;
     background-attachment: fixed !important;
 }
 
