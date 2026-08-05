@@ -50,6 +50,29 @@ GURU_GOCHAR_OVERVIEW_BLURB = (
     "are traditionally considered favorable; the rest are considered more challenging."
 )
 
+# Classical significations of each house (bhava), counted from the natal
+# Moon -- the traditional Vedic reference point for reading gochara (transits).
+HOUSE_SIGNIFICATIONS_FROM_MOON = {
+    1: "Self, body, general well-being",
+    2: "Wealth, family, speech",
+    3: "Courage, siblings, communication, effort",
+    4: "Home, mother, emotional foundation",
+    5: "Creativity, children, intellect, romance",
+    6: "Health, obstacles, daily work, conflict",
+    7: "Partnerships, marriage, business",
+    8: "Transformation, longevity, hidden matters",
+    9: "Fortune, higher learning, dharma, travel",
+    10: "Career, public standing, authority",
+    11: "Gains, income, aspirations, community",
+    12: "Loss, rest, spirituality, foreign lands",
+}
+
+RETROGRADE_OVERVIEW_BLURB = (
+    "Retrograde (Vakri) planets appear to move backward through the zodiac from "
+    "Earth's vantage point. Traditionally this is read as a period of review, delay, "
+    "or reversal in whatever that planet governs, rather than forward momentum."
+)
+
 
 @dataclass
 class TransitPlacement:

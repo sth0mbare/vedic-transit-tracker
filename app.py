@@ -17,6 +17,8 @@ from vedic_astro.constants import SUN, VENUS
 from vedic_astro.dasha import DASHA_OVERVIEW_BLURB, current_dasha, mahadasha_periods_for_lords
 from vedic_astro.transits import (
     GURU_GOCHAR_OVERVIEW_BLURB,
+    HOUSE_SIGNIFICATIONS_FROM_MOON,
+    RETROGRADE_OVERVIEW_BLURB,
     SADE_SATI_OVERVIEW_BLURB,
     SADE_SATI_PHASE_BLURBS,
     compute_guru_gochar,
@@ -83,6 +85,16 @@ def _render_live_transits(chart) -> None:
         for name, t in transits.items()
     ]
     st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+
+    retrograde_names = [name for name, t in transits.items() if t.retrograde]
+    if retrograde_names:
+        st.warning(f"Currently retrograde: {', '.join(retrograde_names)}")
+        st.caption(RETROGRADE_OVERVIEW_BLURB)
+
+    with st.expander("What do these houses mean?"):
+        st.caption("Houses are counted from your natal Moon -- the traditional Vedic reference point for gochara.")
+        for house_num, signification in HOUSE_SIGNIFICATIONS_FROM_MOON.items():
+            st.markdown(f"**House {house_num}** — {signification}")
 
 
 def _render_sade_sati(chart) -> None:
