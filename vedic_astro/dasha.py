@@ -41,6 +41,8 @@ class DashaPeriod:
 class DashaStatus:
     mahadasha: DashaPeriod
     antardasha: DashaPeriod
+    next_mahadasha: DashaPeriod
+    next_antardasha: DashaPeriod
 
 
 def _years_to_timedelta(years: float) -> timedelta:
@@ -122,7 +124,28 @@ def current_dasha(
     mahadashas = _mahadasha_sequence(birth_dt_utc, moon_longitude, until_dt=at_dt)
     mahadasha = next((p for p in mahadashas if p.contains(at_dt)), mahadashas[-1])
 
-    antardashas = _antardasha_sequence(mahadasha)
-    antardasha = next((p for p in antardashas if p.contains(at_dt)), antardashas[-1])
+    cycle_idx = DASHA_LORD_CYCLE.index(mahadasha.lord)
+    next_lord = DASHA_LORD_CYCLE[(cycle_idx + 1) % 9]
+    next_mahadasha = DashaPeriod(
+        lord=next_lord,
+        start=mahadasha.end,
+        end=mahadasha.end + _years_to_timedelta(DASHA_YEARS[next_lord]),
+    )
 
-    return DashaStatus(mahadasha=mahadasha, antardasha=antardasha)
+    antardashas = _antardasha_sequence(mahadasha)
+    antardasha_index = next(
+        (i for i, p in enumerate(antardashas) if p.contains(at_dt)), len(antardashas) - 1
+    )
+    antardasha = antardashas[antardasha_index]
+
+    if antardasha_index + 1 < len(antardashas):
+        next_antardasha = antardashas[antardasha_index + 1]
+    else:
+        next_antardasha = _antardasha_sequence(next_mahadasha)[0]
+
+    return DashaStatus(
+        mahadasha=mahadasha,
+        antardasha=antardasha,
+        next_mahadasha=next_mahadasha,
+        next_antardasha=next_antardasha,
+    )

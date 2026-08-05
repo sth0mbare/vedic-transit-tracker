@@ -128,7 +128,21 @@ def _render_current_dasha(chart) -> None:
     st.caption(DASHA_OVERVIEW_BLURB)
 
     remaining = status.antardasha.end - now
-    st.caption(f"Current antardasha ends around {status.antardasha.end.date()} (~{_format_timedelta_years_months(remaining)} from now)")
+    st.caption(
+        f"Current antardasha ends around {status.antardasha.end.date()} "
+        f"(~{_format_timedelta_years_months(remaining)} from now)"
+    )
+
+    st.divider()
+    st.caption("Coming up next")
+
+    col3, col4 = st.columns(2)
+    with col3:
+        card("Next Mahadasha", status.next_mahadasha.lord)
+        st.caption(f"{status.next_mahadasha.start.date()} → {status.next_mahadasha.end.date()}")
+    with col4:
+        card("Next Antardasha", status.next_antardasha.lord)
+        st.caption(f"{status.next_antardasha.start.date()} → {status.next_antardasha.end.date()}")
 
 
 def _render_mahadasha(chart) -> None:

@@ -74,6 +74,20 @@ def test_antardasha_falls_within_mahadasha(natal_chart):
     assert status.antardasha.end <= status.mahadasha.end
 
 
+def test_next_mahadasha_and_antardasha_at_birth(natal_chart):
+    moon_longitude = natal_chart.planets["Moon"].longitude
+    status = current_dasha(BIRTH_DT, moon_longitude, at_dt=BIRTH_DT)
+
+    # Next mahadasha follows Sun's directly in the DASHA_LORD_CYCLE order.
+    assert status.next_mahadasha.lord == "Moon"
+    assert status.next_mahadasha.start == status.mahadasha.end
+    assert status.next_mahadasha.start.date().isoformat() == "1994-01-06"
+
+    # Next antardasha follows Jupiter directly within the Sun mahadasha.
+    assert status.next_antardasha.lord == "Saturn"
+    assert status.next_antardasha.start == status.antardasha.end
+
+
 def test_sun_venus_mahadasha_periods(natal_chart):
     moon_longitude = natal_chart.planets["Moon"].longitude
     periods = mahadasha_periods_for_lords(BIRTH_DT, moon_longitude, [SUN, VENUS])
