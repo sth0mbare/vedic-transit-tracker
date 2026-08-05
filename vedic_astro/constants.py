@@ -37,6 +37,7 @@ RASHI_ENGLISH = [
     "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
     "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
 ]
+RASHI_ENGLISH_NAMES = dict(zip(RASHIS, RASHI_ENGLISH))
 
 # --- Nakshatras: 27 lunar mansions, 13d20m each, starting at 0 Aries ---
 NAKSHATRAS = [

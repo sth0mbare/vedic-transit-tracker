@@ -20,7 +20,7 @@ import pytest
 from vedic_astro.chart import compute_natal_chart
 from vedic_astro.constants import SUN, VENUS
 from vedic_astro.dasha import current_dasha, mahadasha_periods_for_lords
-from vedic_astro.transits import compute_sade_sati, compute_transits
+from vedic_astro.transits import compute_guru_gochar, compute_sade_sati, compute_transits
 
 PUNE_LAT, PUNE_LON = 18.5213738, 73.8545071
 BIRTH_DT = datetime(1990, 5, 15, 9, 0, tzinfo=timezone.utc)  # 14:30 IST
@@ -91,6 +91,15 @@ def test_sade_sati_active_at_birth(natal_chart):
     assert status.active is True
     assert status.house_from_moon == 1
     assert status.phase == "Peak (Chudasi)"
+
+
+def test_guru_gochar_at_birth(natal_chart):
+    # At birth, "current" Jupiter is just natal Jupiter: Mithuna, which is
+    # house 6 from natal Moon (Makara) -- not one of the 5 favorable houses.
+    status = compute_guru_gochar(natal_chart, at_dt=BIRTH_DT)
+    assert status.jupiter_rashi == "Mithuna"
+    assert status.house_from_moon == 6
+    assert status.favorable is False
 
 
 def test_transits_cover_all_grahas_with_valid_houses(natal_chart):

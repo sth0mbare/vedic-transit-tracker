@@ -4,7 +4,15 @@ Shared by chart.py (natal chart) and transits.py (gochara), so the same
 sign/nakshatra/house math is used everywhere.
 """
 
-from .constants import DEG_PER_NAKSHATRA, DEG_PER_PADA, DEG_PER_RASHI, NAKSHATRAS, NAKSHATRA_LORDS, RASHIS
+from .constants import (
+    DEG_PER_NAKSHATRA,
+    DEG_PER_PADA,
+    DEG_PER_RASHI,
+    NAKSHATRAS,
+    NAKSHATRA_LORDS,
+    RASHI_ENGLISH_NAMES,
+    RASHIS,
+)
 
 
 def rashi_index(longitude: float) -> int:
@@ -14,6 +22,11 @@ def rashi_index(longitude: float) -> int:
 
 def rashi_name(longitude: float) -> str:
     return RASHIS[rashi_index(longitude)]
+
+
+def rashi_display_name(rashi: str) -> str:
+    """User-facing bilingual label, e.g. 'Dhanu' -> 'Dhanu (Sagittarius)'."""
+    return f"{rashi} ({RASHI_ENGLISH_NAMES[rashi]})"
 
 
 def nakshatra_index(longitude: float) -> int:

@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
 from .chart import NatalChart
-from .constants import DEFAULT_AYANAMSA, MOON, SATURN
+from .constants import DEFAULT_AYANAMSA, JUPITER, MOON, SATURN
 from .ephemeris import get_planet_positions
 from .util import house_from_sign, rashi_index, rashi_name
 
@@ -39,6 +39,17 @@ SADE_SATI_OVERVIEW_BLURB = (
     "after your natal Moon -- it happens about twice in an average lifetime."
 )
 
+# Classical Jyotish treats these five houses-from-Moon as Jupiter's most
+# favorable transit positions (sometimes called Guru's five auspicious
+# spots); the remaining houses are traditionally considered more challenging.
+GURU_GOCHAR_FAVORABLE_HOUSES = {2, 5, 7, 9, 11}
+
+GURU_GOCHAR_OVERVIEW_BLURB = (
+    "Guru Gochar tracks Jupiter's roughly 1-year transit through each sign, counted "
+    "from your natal Moon. The 2nd, 5th, 7th, 9th, and 11th houses from your Moon "
+    "are traditionally considered favorable; the rest are considered more challenging."
+)
+
 
 @dataclass
 class TransitPlacement:
@@ -57,6 +68,14 @@ class SadeSatiStatus:
     house_from_moon: int | None  # 12, 1, or 2 when active
     saturn_rashi: str
     next_transition: datetime | None  # approx. date Saturn next crosses a sign boundary
+
+
+@dataclass
+class GuruGocharStatus:
+    house_from_moon: int  # 1-12
+    favorable: bool
+    jupiter_rashi: str
+    next_transition: datetime | None  # approx. date Jupiter next crosses a sign boundary
 
 
 def compute_transits(
@@ -145,5 +164,26 @@ def compute_sade_sati(
         phase=phase,
         house_from_moon=house if phase else None,
         saturn_rashi=rashi_name(saturn_position.longitude),
+        next_transition=next_transition,
+    )
+
+
+def compute_guru_gochar(
+    natal_chart: NatalChart,
+    at_dt: datetime | None = None,
+    ayanamsa_name: str = DEFAULT_AYANAMSA,
+) -> GuruGocharStatus:
+    if at_dt is None:
+        at_dt = datetime.now(timezone.utc)
+
+    moon_longitude = natal_chart.planets[MOON].longitude
+    jupiter_position = get_planet_positions(at_dt, ayanamsa_name)[JUPITER]
+    house = house_from_sign(jupiter_position.longitude, moon_longitude)
+    next_transition = _find_next_rashi_change(JUPITER, at_dt, ayanamsa_name)
+
+    return GuruGocharStatus(
+        house_from_moon=house,
+        favorable=house in GURU_GOCHAR_FAVORABLE_HOUSES,
+        jupiter_rashi=rashi_name(jupiter_position.longitude),
         next_transition=next_transition,
     )
