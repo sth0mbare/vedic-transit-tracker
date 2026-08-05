@@ -2,4 +2,3 @@ streamlit
 pyswisseph
 geopy
 timezonefinder
-pandas
