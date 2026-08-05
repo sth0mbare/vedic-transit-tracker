@@ -24,6 +24,26 @@ hr {
     border-color: rgba(217, 180, 90, 0.25) !important;
 }
 
+/* Starfield + nebula background: a few tiled star-dot layers for scattered
+   stars, plus large soft blurred blobs for nebula-cloud color. */
+.stApp {
+    background-color: #05050d !important;
+    background-image:
+        radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.85), transparent),
+        radial-gradient(1px 1px at 90px 120px, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(1.5px 1.5px at 160px 60px, rgba(255, 255, 255, 0.75), transparent),
+        radial-gradient(1px 1px at 210px 180px, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(2px 2px at 260px 40px, rgba(255, 255, 255, 0.85), transparent),
+        radial-gradient(1px 1px at 310px 220px, rgba(255, 255, 255, 0.45), transparent),
+        radial-gradient(1px 1px at 50px 260px, rgba(255, 255, 255, 0.55), transparent),
+        radial-gradient(ellipse 900px 550px at 15% 15%, rgba(160, 120, 170, 0.32), transparent 65%),
+        radial-gradient(ellipse 750px 650px at 85% 55%, rgba(200, 140, 100, 0.26), transparent 65%),
+        radial-gradient(ellipse 650px 550px at 45% 95%, rgba(100, 110, 175, 0.28), transparent 65%) !important;
+    background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat !important;
+    background-size: 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, 350px 350px, auto, auto, auto !important;
+    background-attachment: fixed !important;
+}
+
 .vt-card {
     background: linear-gradient(160deg, #171B36 0%, #12152A 100%);
     border: 1px solid rgba(217, 180, 90, 0.25);
