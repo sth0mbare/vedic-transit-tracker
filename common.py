@@ -10,7 +10,7 @@ from datetime import date, datetime, time
 import streamlit as st
 
 from vedic_astro.chart import NatalChart, compute_natal_chart
-from vedic_astro.constants import AYANAMSAS, DEFAULT_AYANAMSA
+from vedic_astro.constants import AYANAMSA_DESCRIPTIONS, AYANAMSA_OVERVIEW_BLURB, AYANAMSAS, DEFAULT_AYANAMSA
 from vedic_astro.location import LocationError, Place, geocode_place, local_to_utc
 
 
@@ -42,6 +42,10 @@ def birth_details_form() -> None:
             ayanamsa = st.selectbox(
                 "Ayanamsa", options=list(AYANAMSAS), index=list(AYANAMSAS).index(DEFAULT_AYANAMSA)
             )
+            with st.expander("What's an ayanamsa?"):
+                st.caption(AYANAMSA_OVERVIEW_BLURB)
+                for name, description in AYANAMSA_DESCRIPTIONS.items():
+                    st.markdown(f"**{name}** — {description}")
             submitted = st.form_submit_button("Compute chart")
 
         if submitted:

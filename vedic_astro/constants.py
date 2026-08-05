@@ -74,6 +74,32 @@ AYANAMSAS = {
 }
 DEFAULT_AYANAMSA = "Lahiri"
 
+AYANAMSA_OVERVIEW_BLURB = (
+    "The ayanamsa is the angular gap between the sidereal zodiac (fixed to the "
+    "actual stars, used in Vedic astrology) and the tropical zodiac (fixed to "
+    "the seasons, used in Western astrology). Different schools measure that "
+    "gap slightly differently, which shifts every planet's sign by a degree "
+    "or two depending which one you pick."
+)
+
+AYANAMSA_DESCRIPTIONS = {
+    "Lahiri": (
+        "The official ayanamsa adopted by the Indian government's Calendar "
+        "Reform Committee in 1955 -- the de facto standard used by most "
+        "Vedic astrologers today, and the default here."
+    ),
+    "Raman": (
+        "Devised by astrologer B.V. Raman using a different reference star "
+        "point than Lahiri -- a few tenths of a degree apart from it, "
+        "favored in some traditional Indian astrology lineages."
+    ),
+    "Krishnamurti (KP)": (
+        "Developed by K.S. Krishnamurti for his Krishnamurti Paddhati (KP) "
+        "system of astrology, which relies on finer sub-divisions of each "
+        "sign for its predictive technique."
+    ),
+}
+
 DEG_PER_RASHI = 30.0
 DEG_PER_NAKSHATRA = 360.0 / 27.0  # 13 deg 20 min
 DEG_PER_PADA = DEG_PER_NAKSHATRA / 4.0  # 3 deg 20 min
