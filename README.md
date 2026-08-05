@@ -35,6 +35,7 @@ streamlit run app.py
 ## Run tests
 
 ```bash
+pip install pytest
 pytest tests/
 ```
 
