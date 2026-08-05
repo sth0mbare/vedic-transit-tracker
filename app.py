@@ -10,11 +10,13 @@ from datetime import datetime, timezone
 import streamlit as st
 
 from common import birth_details_form, get_chart
+from styling import badge, card, inject_theme
 from vedic_astro.constants import SUN, VENUS
 from vedic_astro.dasha import mahadasha_periods_for_lords
 from vedic_astro.transits import SADE_SATI_OVERVIEW_BLURB, SADE_SATI_PHASE_BLURBS, compute_sade_sati
 
 st.set_page_config(page_title="Vedic Transit & Dasha Calculator", page_icon="🪐", layout="centered")
+inject_theme()
 
 
 def _format_timedelta_years_months(td) -> str:
@@ -29,17 +31,20 @@ def _format_timedelta_years_months(td) -> str:
 
 
 def _render_sade_sati(chart) -> None:
-    st.metric("Natal Moon Rashi", chart.moon_rashi)
+    card("Natal Moon Rashi", chart.moon_rashi)
 
     with st.spinner("Checking Saturn's transit..."):
         sade_sati = compute_sade_sati(chart)
 
     if sade_sati.active:
-        st.warning(f"**Active — {sade_sati.phase}** · Saturn transiting {sade_sati.saturn_rashi}")
-        st.caption(SADE_SATI_PHASE_BLURBS[sade_sati.phase])
+        status_badge = badge(f"Active — {sade_sati.phase}", "upcoming")
+        blurb = SADE_SATI_PHASE_BLURBS[sade_sati.phase]
     else:
-        st.success(f"Not active · Saturn transiting {sade_sati.saturn_rashi}")
-        st.caption(SADE_SATI_OVERVIEW_BLURB)
+        status_badge = badge("Not active", "active")
+        blurb = SADE_SATI_OVERVIEW_BLURB
+
+    card("Sade Sati Status", f"Saturn transiting {sade_sati.saturn_rashi}", status_badge)
+    st.caption(blurb)
 
     if sade_sati.next_transition:
         remaining = sade_sati.next_transition - datetime.now(timezone.utc)
@@ -57,14 +62,14 @@ def _render_mahadasha(chart) -> None:
     col1, col2 = st.columns(2)
     for col, lord in zip((col1, col2), (SUN, VENUS)):
         period = periods[lord]
+        if period.contains(now):
+            status_badge = badge("Currently active", "active")
+        elif now < period.start:
+            status_badge = badge("Upcoming", "upcoming")
+        else:
+            status_badge = badge("Already passed", "neutral")
         with col:
-            st.metric(f"{lord} Mahadasha", f"{period.start.date()} → {period.end.date()}")
-            if period.contains(now):
-                st.success("Currently active")
-            elif now < period.start:
-                st.caption("Upcoming")
-            else:
-                st.caption("Already passed")
+            card(f"{lord} Mahadasha", f"{period.start.date()} → {period.end.date()}", status_badge)
 
 
 st.title("🪐 Vedic Transit & Dasha Calculator")
