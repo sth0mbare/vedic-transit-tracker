@@ -19,6 +19,26 @@ SADE_SATI_PHASES = {
     2: "Setting (Vaakri)",
 }
 
+SADE_SATI_PHASE_BLURBS = {
+    "Rising (Arohi)": (
+        "Saturn is transiting the sign before your natal Moon (the 12th house from it) -- "
+        "traditionally the build-up phase, as its effects begin to intensify."
+    ),
+    "Peak (Chudasi)": (
+        "Saturn is transiting the same sign as your natal Moon (the 1st house from it) -- "
+        "traditionally considered the most intense phase of Sade Sati."
+    ),
+    "Setting (Vaakri)": (
+        "Saturn is transiting the sign after your natal Moon (the 2nd house from it) -- "
+        "traditionally the winding-down phase, as its effects gradually ease off."
+    ),
+}
+
+SADE_SATI_OVERVIEW_BLURB = (
+    "Sade Sati is Saturn's roughly 7.5-year transit through the signs before, on, and "
+    "after your natal Moon -- it happens about twice in an average lifetime."
+)
+
 
 @dataclass
 class TransitPlacement:
