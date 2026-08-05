@@ -7,6 +7,7 @@ single-purpose view built on the same `vedic_astro` core library.
 
 from datetime import datetime, timezone
 
+import pandas as pd
 import streamlit as st
 
 from common import birth_details_form, get_chart
@@ -28,6 +29,29 @@ def _format_timedelta_years_months(td) -> str:
     if years:
         return f"{years}y"
     return f"{months}m" if months else "< 1m"
+
+
+def _render_natal_chart(chart) -> None:
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        card("Lagna (Ascendant)", chart.ascendant_rashi)
+    with col2:
+        card("Moon Rashi", chart.moon_rashi)
+    with col3:
+        card("Moon Nakshatra", f"{chart.moon_nakshatra} (pada {chart.moon_pada})")
+
+    st.caption(f"Moon's nakshatra lord: {chart.moon_nakshatra_lord}")
+
+    rows = [
+        {
+            "Graha": name,
+            "Rashi": p.rashi,
+            "House (from Lagna)": p.house,
+            "Retrograde": "Yes" if p.retrograde else "",
+        }
+        for name, p in chart.planets.items()
+    ]
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
 
 
 def _render_sade_sati(chart) -> None:
@@ -82,7 +106,11 @@ if chart:
     st.divider()
     st.caption(f"{place.address} · {place.timezone} · Ayanamsa: {chart.ayanamsa}")
 
-    tab_sade_sati, tab_mahadasha = st.tabs(["Sade Sati", "Sun & Venus Mahadasha"])
+    tab_natal, tab_sade_sati, tab_mahadasha = st.tabs(
+        ["Natal Chart", "Sade Sati", "Sun & Venus Mahadasha"]
+    )
+    with tab_natal:
+        _render_natal_chart(chart)
     with tab_sade_sati:
         _render_sade_sati(chart)
     with tab_mahadasha:
