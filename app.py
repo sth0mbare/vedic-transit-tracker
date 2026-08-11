@@ -19,6 +19,7 @@ from vedic_astro.transits import (
     COMBUST_OVERVIEW_BLURB,
     GURU_GOCHAR_OVERVIEW_BLURB,
     HOUSE_SIGNIFICATIONS_FROM_MOON,
+    JUPITER_COMBUSTION_ORB_DEGREES,
     RETROGRADE_OVERVIEW_BLURB,
     SADE_SATI_OVERVIEW_BLURB,
     SADE_SATI_PHASE_BLURBS,
@@ -148,6 +149,14 @@ def _render_guru_gochar(chart) -> None:
     if guru_gochar.combust:
         st.warning("Jupiter is currently combust (close to the Sun)")
         st.caption(COMBUST_OVERVIEW_BLURB)
+
+    proximity_note = ""
+    if abs(guru_gochar.separation_from_sun_degrees - JUPITER_COMBUSTION_ORB_DEGREES) <= 2.0:
+        proximity_note = " — close to the edge of the combustion orb"
+    st.caption(
+        f"{guru_gochar.separation_from_sun_degrees:.1f}° from the Sun "
+        f"(combustion orb is {JUPITER_COMBUSTION_ORB_DEGREES:.0f}°){proximity_note}"
+    )
 
     if guru_gochar.next_transition:
         remaining = guru_gochar.next_transition - datetime.now(timezone.utc)

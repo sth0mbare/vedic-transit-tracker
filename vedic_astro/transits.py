@@ -110,6 +110,7 @@ class GuruGocharStatus:
     jupiter_rashi: str
     retrograde: bool
     combust: bool
+    separation_from_sun_degrees: float
     next_transition: datetime | None  # approx. date Jupiter next crosses a sign boundary
 
 
@@ -225,5 +226,6 @@ def compute_guru_gochar(
         jupiter_rashi=rashi_name(jupiter_position.longitude),
         retrograde=jupiter_position.retrograde,
         combust=separation_from_sun <= JUPITER_COMBUSTION_ORB_DEGREES,
+        separation_from_sun_degrees=separation_from_sun,
         next_transition=next_transition,
     )

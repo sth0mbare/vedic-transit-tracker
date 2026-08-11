@@ -119,6 +119,7 @@ def test_guru_gochar_at_birth(natal_chart):
     # Natal Sun (Vrishabha, ~30.5deg) and Jupiter (Mithuna, ~75.8deg) are
     # ~45deg apart at birth -- well outside the 11deg combustion orb.
     assert status.combust is False
+    assert status.separation_from_sun_degrees == pytest.approx(45.24, abs=0.01)
 
 
 def test_guru_gochar_combust_true_positive(natal_chart):
