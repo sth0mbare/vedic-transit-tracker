@@ -9,9 +9,9 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
 from .chart import NatalChart
-from .constants import DEFAULT_AYANAMSA, JUPITER, MOON, SATURN
+from .constants import DEFAULT_AYANAMSA, JUPITER, MOON, SATURN, SUN
 from .ephemeris import get_planet_positions
-from .util import house_from_sign, rashi_index, rashi_name
+from .util import angular_separation, house_from_sign, rashi_index, rashi_name
 
 SADE_SATI_PHASES = {
     12: "Rising (Arohi)",
@@ -73,6 +73,16 @@ RETROGRADE_OVERVIEW_BLURB = (
     "or reversal in whatever that planet governs, rather than forward momentum."
 )
 
+# Classical orb (in degrees of separation from the Sun) within which Jupiter
+# is considered combust (Asta) -- commonly cited as 11 degrees in Jyotish texts.
+JUPITER_COMBUSTION_ORB_DEGREES = 11.0
+
+COMBUST_OVERVIEW_BLURB = (
+    "A planet is considered combust (Asta) when it's within a close degree-orb of "
+    "the Sun -- traditionally read as that planet's significations being weakened "
+    "or obscured by the Sun's glare, rather than removed entirely."
+)
+
 
 @dataclass
 class TransitPlacement:
@@ -98,6 +108,8 @@ class GuruGocharStatus:
     house_from_moon: int  # 1-12
     favorable: bool
     jupiter_rashi: str
+    retrograde: bool
+    combust: bool
     next_transition: datetime | None  # approx. date Jupiter next crosses a sign boundary
 
 
@@ -200,13 +212,18 @@ def compute_guru_gochar(
         at_dt = datetime.now(timezone.utc)
 
     moon_longitude = natal_chart.planets[MOON].longitude
-    jupiter_position = get_planet_positions(at_dt, ayanamsa_name)[JUPITER]
+    positions = get_planet_positions(at_dt, ayanamsa_name)
+    jupiter_position = positions[JUPITER]
+    sun_position = positions[SUN]
     house = house_from_sign(jupiter_position.longitude, moon_longitude)
     next_transition = _find_next_rashi_change(JUPITER, at_dt, ayanamsa_name)
+    separation_from_sun = angular_separation(jupiter_position.longitude, sun_position.longitude)
 
     return GuruGocharStatus(
         house_from_moon=house,
         favorable=house in GURU_GOCHAR_FAVORABLE_HOUSES,
         jupiter_rashi=rashi_name(jupiter_position.longitude),
+        retrograde=jupiter_position.retrograde,
+        combust=separation_from_sun <= JUPITER_COMBUSTION_ORB_DEGREES,
         next_transition=next_transition,
     )

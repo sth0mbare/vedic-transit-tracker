@@ -21,6 +21,7 @@ from vedic_astro.chart import compute_natal_chart
 from vedic_astro.constants import SUN, VENUS
 from vedic_astro.dasha import current_dasha, mahadasha_periods_for_lords
 from vedic_astro.transits import compute_guru_gochar, compute_sade_sati, compute_transits
+from vedic_astro.util import angular_separation
 
 PUNE_LAT, PUNE_LON = 18.5213738, 73.8545071
 BIRTH_DT = datetime(1990, 5, 15, 9, 0, tzinfo=timezone.utc)  # 14:30 IST
@@ -114,6 +115,26 @@ def test_guru_gochar_at_birth(natal_chart):
     assert status.jupiter_rashi == "Mithuna"
     assert status.house_from_moon == 6
     assert status.favorable is False
+    assert status.retrograde is False
+    # Natal Sun (Vrishabha, ~30.5deg) and Jupiter (Mithuna, ~75.8deg) are
+    # ~45deg apart at birth -- well outside the 11deg combustion orb.
+    assert status.combust is False
+
+
+def test_guru_gochar_combust_true_positive(natal_chart):
+    # 1990-07-15 is a real Jupiter-Sun conjunction (~0.17deg apart per the
+    # ephemeris), well inside the 11deg orb -- confirms combust actually
+    # triggers True and isn't just a threshold comparison that's always False.
+    conjunction_dt = datetime(1990, 7, 15, tzinfo=timezone.utc)
+    status = compute_guru_gochar(natal_chart, at_dt=conjunction_dt)
+    assert status.combust is True
+
+
+def test_angular_separation():
+    assert angular_separation(10, 20) == pytest.approx(10)
+    assert angular_separation(350, 10) == pytest.approx(20)  # wraps around 0
+    assert angular_separation(0, 180) == pytest.approx(180)  # opposite signs
+    assert angular_separation(45, 45) == pytest.approx(0)
 
 
 def test_transits_cover_all_grahas_with_valid_houses(natal_chart):

@@ -16,6 +16,7 @@ from styling import badge, card, inject_theme
 from vedic_astro.constants import SUN, VENUS
 from vedic_astro.dasha import DASHA_OVERVIEW_BLURB, current_dasha, mahadasha_periods_for_lords
 from vedic_astro.transits import (
+    COMBUST_OVERVIEW_BLURB,
     GURU_GOCHAR_OVERVIEW_BLURB,
     HOUSE_SIGNIFICATIONS_FROM_MOON,
     RETROGRADE_OVERVIEW_BLURB,
@@ -139,6 +140,14 @@ def _render_guru_gochar(chart) -> None:
         status_badge,
     )
     st.caption(GURU_GOCHAR_OVERVIEW_BLURB)
+
+    if guru_gochar.retrograde:
+        st.warning("Jupiter is currently retrograde")
+        st.caption(RETROGRADE_OVERVIEW_BLURB)
+
+    if guru_gochar.combust:
+        st.warning("Jupiter is currently combust (close to the Sun)")
+        st.caption(COMBUST_OVERVIEW_BLURB)
 
     if guru_gochar.next_transition:
         remaining = guru_gochar.next_transition - datetime.now(timezone.utc)

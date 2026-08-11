@@ -48,6 +48,12 @@ def nakshatra_pada(longitude: float) -> int:
     return int(position_in_nakshatra // DEG_PER_PADA) + 1
 
 
+def angular_separation(longitude_a: float, longitude_b: float) -> float:
+    """Shortest angular distance between two longitudes, in degrees, 0-180."""
+    diff = abs(longitude_a - longitude_b) % 360
+    return min(diff, 360 - diff)
+
+
 def house_from_sign(target_longitude: float, reference_longitude: float) -> int:
     """Whole-sign house number (1-12) of target, counted from reference's sign.
 
