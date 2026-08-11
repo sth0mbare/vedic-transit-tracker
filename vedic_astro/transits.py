@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
 from .chart import NatalChart
-from .constants import DEFAULT_AYANAMSA, JUPITER, MOON, SATURN, SUN
+from .constants import DEFAULT_AYANAMSA, JUPITER, MARS, MERCURY, MOON, SATURN, SUN, VENUS
 from .ephemeris import get_planet_positions
 from .util import angular_separation, house_from_sign, rashi_index, rashi_name
 
@@ -73,9 +73,19 @@ RETROGRADE_OVERVIEW_BLURB = (
     "or reversal in whatever that planet governs, rather than forward momentum."
 )
 
-# Classical orb (in degrees of separation from the Sun) within which Jupiter
-# is considered combust (Asta) -- commonly cited as 11 degrees in Jyotish texts.
-JUPITER_COMBUSTION_ORB_DEGREES = 11.0
+# Classical orbs (degrees of separation from the Sun) within which each graha
+# is considered combust (Asta), per Brihat Parashara Hora Shastra. Sun can't
+# be combust with itself, and combustion isn't traditionally applied to the
+# shadow points Rahu/Ketu, so neither appears in this table.
+COMBUSTION_ORBS_DEGREES = {
+    MOON: 12.0,
+    MARS: 17.0,
+    MERCURY: 14.0,
+    JUPITER: 11.0,
+    VENUS: 10.0,
+    SATURN: 15.0,
+}
+JUPITER_COMBUSTION_ORB_DEGREES = COMBUSTION_ORBS_DEGREES[JUPITER]
 
 COMBUST_OVERVIEW_BLURB = (
     "A planet is considered combust (Asta) when it's within a close degree-orb of "
@@ -92,6 +102,9 @@ class TransitPlacement:
     house_from_moon: int
     house_from_lagna: int
     retrograde: bool
+    separation_from_sun_degrees: float | None  # None for the Sun itself
+    combust: bool | None  # None where combustion doesn't classically apply (Sun, Rahu, Ketu)
+    next_sign_change: datetime | None  # approx. date this graha next crosses a sign boundary
 
 
 @dataclass
@@ -129,17 +142,29 @@ def compute_transits(
     lagna_longitude = natal_chart.ascendant_longitude
 
     raw_positions = get_planet_positions(at_dt, ayanamsa_name)
-    return {
-        name: TransitPlacement(
+    sun_longitude = raw_positions[SUN].longitude
+
+    placements = {}
+    for name, pos in raw_positions.items():
+        if name == SUN:
+            separation, combust = None, None
+        else:
+            separation = angular_separation(pos.longitude, sun_longitude)
+            orb = COMBUSTION_ORBS_DEGREES.get(name)
+            combust = separation <= orb if orb is not None else None
+
+        placements[name] = TransitPlacement(
             name=name,
             longitude=pos.longitude,
             rashi=rashi_name(pos.longitude),
             house_from_moon=house_from_sign(pos.longitude, moon_longitude),
             house_from_lagna=house_from_sign(pos.longitude, lagna_longitude),
             retrograde=pos.retrograde,
+            separation_from_sun_degrees=separation,
+            combust=combust,
+            next_sign_change=_find_next_rashi_change(name, at_dt, ayanamsa_name),
         )
-        for name, pos in raw_positions.items()
-    }
+    return placements
 
 
 def _find_next_rashi_change(

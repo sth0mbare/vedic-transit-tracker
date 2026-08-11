@@ -80,9 +80,14 @@ def _render_live_transits(chart) -> None:
         {
             "Graha": name,
             "Rashi": rashi_display_name(t.rashi),
-            "House (from Moon)": t.house_from_moon,
-            "House (from Lagna)": t.house_from_lagna,
-            "Retrograde": "Yes" if t.retrograde else "",
+            "House (Moon)": t.house_from_moon,
+            "House (Lagna)": t.house_from_lagna,
+            "Retro": "Yes" if t.retrograde else "",
+            "Sep. from Sun": (
+                f"{t.separation_from_sun_degrees:.1f}°" if t.separation_from_sun_degrees is not None else "—"
+            ),
+            "Combust": "Yes" if t.combust else ("—" if t.combust is None else ""),
+            "Next Change": t.next_sign_change.date().isoformat() if t.next_sign_change else "—",
         }
         for name, t in transits.items()
     ]
@@ -92,6 +97,11 @@ def _render_live_transits(chart) -> None:
     if retrograde_names:
         st.warning(f"Currently retrograde: {', '.join(retrograde_names)}")
         st.caption(RETROGRADE_OVERVIEW_BLURB)
+
+    combust_names = [name for name, t in transits.items() if t.combust]
+    if combust_names:
+        st.warning(f"Currently combust: {', '.join(combust_names)}")
+        st.caption(COMBUST_OVERVIEW_BLURB)
 
     with st.expander("What do these houses mean?"):
         st.caption("Houses are counted from your natal Moon -- the traditional Vedic reference point for gochara.")

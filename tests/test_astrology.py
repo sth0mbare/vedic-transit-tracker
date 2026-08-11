@@ -150,3 +150,22 @@ def test_transits_cover_all_grahas_with_valid_houses(natal_chart):
     # At the birth instant, "current" transits equal the natal chart itself.
     assert transits["Saturn"].rashi == "Makara"
     assert transits["Saturn"].house_from_moon == 1
+
+
+def test_transits_combustion_and_next_sign_change(natal_chart):
+    transits = compute_transits(natal_chart, at_dt=BIRTH_DT)
+
+    # Combustion doesn't classically apply to the Sun or the shadow points.
+    assert transits["Sun"].separation_from_sun_degrees is None
+    assert transits["Sun"].combust is None
+    assert transits["Rahu"].combust is None
+    assert transits["Ketu"].combust is None
+
+    # Cross-check against the dedicated Guru Gochar calculation at the same instant.
+    assert transits["Jupiter"].separation_from_sun_degrees == pytest.approx(45.24, abs=0.01)
+    assert transits["Jupiter"].combust is False
+
+    # Every graha should have a next sign-change date within a few years.
+    for name, placement in transits.items():
+        assert placement.next_sign_change is not None
+        assert placement.next_sign_change > BIRTH_DT
