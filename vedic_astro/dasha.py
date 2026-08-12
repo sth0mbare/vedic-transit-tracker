@@ -114,6 +114,15 @@ def mahadasha_periods_for_lords(
     return {lord: by_lord[lord] for lord in lords}
 
 
+def full_mahadasha_sequence(birth_dt_utc: datetime, moon_longitude: float) -> list[DashaPeriod]:
+    """All 9 mahadashas across one full 120-year Vimshottari cycle from birth,
+    in chronological order.
+    """
+    until_dt = birth_dt_utc + _years_to_timedelta(120)
+    periods = _mahadasha_sequence(birth_dt_utc, moon_longitude, until_dt=until_dt)
+    return periods[:9]  # the search can overshoot into the next cycle's first entry
+
+
 def current_dasha(
     birth_dt_utc: datetime, moon_longitude: float, at_dt: datetime | None = None
 ) -> DashaStatus:

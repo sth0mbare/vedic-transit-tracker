@@ -19,7 +19,7 @@ import pytest
 
 from vedic_astro.chart import compute_natal_chart
 from vedic_astro.constants import SUN, VENUS
-from vedic_astro.dasha import current_dasha, mahadasha_periods_for_lords
+from vedic_astro.dasha import current_dasha, full_mahadasha_sequence, mahadasha_periods_for_lords
 from vedic_astro.transits import compute_guru_gochar, compute_sade_sati, compute_transits
 from vedic_astro.util import angular_separation
 
@@ -87,6 +87,21 @@ def test_next_mahadasha_and_antardasha_at_birth(natal_chart):
     # Next antardasha follows Jupiter directly within the Sun mahadasha.
     assert status.next_antardasha.lord == "Saturn"
     assert status.next_antardasha.start == status.antardasha.end
+
+
+def test_full_mahadasha_sequence(natal_chart):
+    moon_longitude = natal_chart.planets["Moon"].longitude
+    sequence = full_mahadasha_sequence(BIRTH_DT, moon_longitude)
+
+    assert len(sequence) == 9
+    assert [p.lord for p in sequence] == [
+        "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury", "Ketu", "Venus",
+    ]
+    # Chronologically contiguous: each period starts exactly where the last ended.
+    for earlier, later in zip(sequence, sequence[1:]):
+        assert earlier.end == later.start
+    assert sequence[0].start.date().isoformat() == "1988-01-07"
+    assert sequence[-1].end.date().isoformat() == "2108-01-07"
 
 
 def test_sun_venus_mahadasha_periods(natal_chart):

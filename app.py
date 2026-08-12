@@ -8,13 +8,19 @@ single-purpose view built on the same `vedic_astro` core library.
 from datetime import datetime, timezone
 
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
 from common import birth_details_form, get_chart
 from styling import badge, card, inject_theme
 from vedic_astro.constants import SUN, VENUS
-from vedic_astro.dasha import DASHA_OVERVIEW_BLURB, current_dasha, mahadasha_periods_for_lords
+from vedic_astro.dasha import (
+    DASHA_OVERVIEW_BLURB,
+    current_dasha,
+    full_mahadasha_sequence,
+    mahadasha_periods_for_lords,
+)
 from vedic_astro.transits import (
     COMBUST_OVERVIEW_BLURB,
     GURU_GOCHAR_OVERVIEW_BLURB,
@@ -207,6 +213,35 @@ def _render_current_dasha(chart) -> None:
     with col4:
         card("Next Antardasha", status.next_antardasha.lord)
         st.caption(f"{status.next_antardasha.start.date()} → {status.next_antardasha.end.date()}")
+
+    st.divider()
+    st.caption("Full mahadasha timeline (whole 120-year cycle)")
+
+    sequence = full_mahadasha_sequence(chart.birth_datetime_utc, moon_longitude)
+    timeline_df = pd.DataFrame(
+        {"Dasha": "Mahadasha", "Lord": p.lord, "Start": p.start, "End": p.end} for p in sequence
+    )
+    fig = px.timeline(
+        timeline_df,
+        x_start="Start",
+        x_end="End",
+        y="Dasha",
+        color="Lord",
+        category_orders={"Lord": [p.lord for p in sequence]},
+    )
+    fig.add_vline(x=now, line_width=2, line_dash="dash", line_color="#D9B45A")
+    fig.update_yaxes(visible=False, title=None)
+    fig.update_xaxes(showgrid=False, color="#F2EFE9")
+    fig.update_layout(
+        height=180,
+        margin=dict(l=0, r=0, t=10, b=0),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#F2EFE9", family="Inter, sans-serif"),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, title=None),
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption("The gold dashed line marks today.")
 
 
 def _render_mahadasha(chart) -> None:

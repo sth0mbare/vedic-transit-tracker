@@ -4,3 +4,4 @@ geopy
 timezonefinder
 pandas
 streamlit-autorefresh
+plotly
