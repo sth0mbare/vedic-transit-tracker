@@ -111,18 +111,19 @@ def _render_live_transits(chart) -> None:
         st.caption(COMBUST_OVERVIEW_BLURB)
 
     st.divider()
-    st.subheader("This Week's Horoscope")
+    st.subheader("Notable Weekly Transits")
     horoscope = compute_weekly_horoscope(chart, transits, start_dt=now, ayanamsa_name=chart.ayanamsa)
     st.caption(f"{horoscope.start} to {horoscope.end}")
 
     moon_text = " → ".join(rashi_display_name(m.rashi) for m in horoscope.moon_journey)
     card("Moon's Journey This Week", moon_text)
 
-    other_changes = {name: t for name, t in horoscope.upcoming_sign_changes.items() if name != "Moon"}
-    if other_changes:
+    # Only Sun and Moon for now; other grahas can be added once we decide
+    # what's worth surfacing at a weekly cadence.
+    sun_change = horoscope.upcoming_sign_changes.get("Sun")
+    if sun_change:
         st.markdown("**Other notable transits this week:**")
-        for name, t in other_changes.items():
-            st.markdown(f"- **{name}** moves into a new sign around {t.next_sign_change.date()}")
+        st.markdown(f"- **Sun** moves into a new sign around {sun_change.next_sign_change.date()}")
 
     with st.expander("What do these houses mean?"):
         st.caption("Houses are counted from your natal Moon -- the traditional Vedic reference point for gochara.")
