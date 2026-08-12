@@ -11,10 +11,18 @@ from dataclasses import dataclass
 from datetime import date, datetime, time as dtime
 from zoneinfo import ZoneInfo
 
+from geopy.exc import GeocoderServiceError
+from geopy.extra.rate_limiter import RateLimiter
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 
 _geolocator = Nominatim(user_agent="vedic-transit-tracker")
+# Nominatim's public instance enforces ~1 req/sec and is shared across every
+# app on the same Streamlit Cloud IP, so it rate-limits easily -- retry with
+# backoff instead of letting a transient GeocoderRateLimited crash the app.
+_geocode_with_retry = RateLimiter(
+    _geolocator.geocode, min_delay_seconds=1, max_retries=3, error_wait_seconds=2.0, swallow_exceptions=False
+)
 _tf = TimezoneFinder()
 
 
@@ -33,7 +41,13 @@ class Place:
 
 def geocode_place(place_name: str) -> Place:
     """Resolve a free-text place name to coordinates + IANA timezone."""
-    location = _geolocator.geocode(place_name, timeout=10)
+    try:
+        location = _geocode_with_retry(place_name, timeout=10)
+    except GeocoderServiceError:
+        raise LocationError(
+            "The location lookup service is temporarily busy or rate-limited. Please wait a few "
+            "seconds and click **Compute chart** again."
+        )
     if location is None:
         raise LocationError(
             f"Could not find a location matching '{place_name}'. "
