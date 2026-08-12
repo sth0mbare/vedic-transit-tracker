@@ -31,43 +31,99 @@ html, body, [class*="css"] {
 h1, h2, h3 {
     font-family: 'Playfair Display', serif !important;
     letter-spacing: 0.02em;
+    color: #1F2A37 !important;
 }
 
 hr {
-    border-color: rgba(217, 180, 90, 0.25) !important;
+    border-color: rgba(90, 114, 144, 0.3) !important;
 }
 
-/* Delicate floral background: a hand-drawn vine with leaves running down
-   the left side, and scattered rose/peony line-art blooms, tiled across
-   the page. Peonies are layered concentric petal rings; roses are a tight
-   spiral bud with four sweeping outer petals. */
+/* Bright sky-with-clouds background: a blue-to-white gradient sky with
+   layered soft radial-gradient cloud puffs (grey-blue shadow undersides
+   first, then dense white cumulus texture bottom-heavy like looking down
+   from above, thinning to wispy cirrus near the top). Pure CSS gradients
+   (no tiled image), so it fills any viewport with no seams. */
 .stApp {
-    background-color: #0a0710 !important;
-    background-image:
-        url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%221400%22%20height%3D%221400%22%3E%0A%3Cdefs%3E%3Cstyle%3E%3Aroot%20%7B%20--rose%3A%23e0aab8%3B%20--rosegold%3A%23e6bd8e%3B%20--sage%3A%23a8c2ab%3B%20%7D%3C/style%3E%3C/defs%3E%0A%3Cpath%20d%3D%22M%2080.0%2C-20.0%20C%20105.0%2C10.0%20225.0%2C96.7%20230.0%2C160.0%20C%20235.0%2C223.3%20101.7%2C296.7%20110.0%2C360.0%20C%20118.3%2C423.3%20275.0%2C476.7%20280.0%2C540.0%20C%20285.0%2C603.3%20136.7%2C676.7%20140.0%2C740.0%20C%20143.3%2C803.3%20296.7%2C860.0%20300.0%2C920.0%20C%20303.3%2C980.0%20161.7%2C1038.3%20160.0%2C1100.0%20C%20158.3%2C1161.7%20291.7%2C1236.7%20290.0%2C1290.0%20C%20288.3%2C1343.3%20173.3%2C1398.3%20150.0%2C1420.0%20%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20opacity%3D%220.65%22/%3E%0A%3Cellipse%20cx%3D%22170.0%22%20cy%3D%2280.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%2820.0%20170.0%2080.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22210.0%22%20cy%3D%22250.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28-40.0%20210.0%20250.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22150.0%22%20cy%3D%22330.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%2860.0%20150.0%20330.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22240.0%22%20cy%3D%22470.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28-15.0%20240.0%20470.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22130.0%22%20cy%3D%22600.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%2850.0%20130.0%20600.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22260.0%22%20cy%3D%22690.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28-40.0%20260.0%20690.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22140.0%22%20cy%3D%22850.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%2845.0%20140.0%20850.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22270.0%22%20cy%3D%22980.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28-20.0%20270.0%20980.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22130.0%22%20cy%3D%221160.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%2850.0%20130.0%201160.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22260.0%22%20cy%3D%221230.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28-25.0%20260.0%201230.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%3Cellipse%20cx%3D%22140.0%22%20cy%3D%221350.0%22%20rx%3D%2216.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%2840.0%20140.0%201350.0%29%22%20stroke%3D%22var%28--sage%29%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%20opacity%3D%220.7%22/%3E%0A%3Cg%20stroke%3D%22var%28--rose%29%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20opacity%3D%220.8%22%3E%0A%3Cellipse%20cx%3D%22694.2%22%20cy%3D%22220.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%2890.0%20694.2%20220.0%29%22/%3E%0A%3Cellipse%20cx%3D%22685.8%22%20cy%3D%22246.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28126.0%20685.8%20246.0%29%22/%3E%0A%3Cellipse%20cx%3D%22663.7%22%20cy%3D%22262.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28162.0%20663.7%20262.0%29%22/%3E%0A%3Cellipse%20cx%3D%22636.3%22%20cy%3D%22262.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28198.0%20636.3%20262.0%29%22/%3E%0A%3Cellipse%20cx%3D%22614.2%22%20cy%3D%22246.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28234.0%20614.2%20246.0%29%22/%3E%0A%3Cellipse%20cx%3D%22605.8%22%20cy%3D%22220.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28270.0%20605.8%20220.0%29%22/%3E%0A%3Cellipse%20cx%3D%22614.2%22%20cy%3D%22194.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28306.0%20614.2%20194.0%29%22/%3E%0A%3Cellipse%20cx%3D%22636.3%22%20cy%3D%22178.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28342.0%20636.3%20178.0%29%22/%3E%0A%3Cellipse%20cx%3D%22663.7%22%20cy%3D%22178.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28378.0%20663.7%20178.0%29%22/%3E%0A%3Cellipse%20cx%3D%22685.8%22%20cy%3D%22194.0%22%20rx%3D%2219.5%22%20ry%3D%2210.4%22%20transform%3D%22rotate%28414.0%20685.8%20194.0%29%22/%3E%0A%3Cellipse%20cx%3D%22677.3%22%20cy%3D%22228.5%22%20rx%3D%2214.3%22%20ry%3D%227.8%22%20transform%3D%22rotate%28107.2%20677.3%20228.5%29%22/%3E%0A%3Cellipse%20cx%3D%22663.3%22%20cy%3D%22245.3%22%20rx%3D%2214.3%22%20ry%3D%227.8%22%20transform%3D%22rotate%28152.2%20663.3%20245.3%29%22/%3E%0A%3Cellipse%20cx%3D%22641.5%22%20cy%3D%22247.3%22%20rx%3D%2214.3%22%20ry%3D%227.8%22%20transform%3D%22rotate%28197.2%20641.5%20247.3%29%22/%3E%0A%3Cellipse%20cx%3D%22624.7%22%20cy%3D%22233.3%22%20rx%3D%2214.3%22%20ry%3D%227.8%22%20transform%3D%22rotate%28242.2%20624.7%20233.3%29%22/%3E%0A%3Cellipse%20cx%3D%22622.7%22%20cy%3D%22211.5%22%20rx%3D%2214.3%22%20ry%3D%227.8%22%20transform%3D%22rotate%28287.2%20622.7%20211.5%29%22/%3E%0A%3Cellipse%20cx%3D%22636.7%22%20cy%3D%22194.7%22%20rx%3D%2214.3%22%20ry%3D%227.8%22%20transform%3D%22rotate%28332.2%20636.7%20194.7%29%22/%3E%0A%3Cellipse%20cx%3D%22658.5%22%20cy%3D%22192.7%22%20rx%3D%2214.3%22%20ry%3D%227.8%22%20transform%3D%22rotate%28377.2%20658.5%20192.7%29%22/%3E%0A%3Cellipse%20cx%3D%22675.3%22%20cy%3D%22206.7%22%20rx%3D%2214.3%22%20ry%3D%227.8%22%20transform%3D%22rotate%28422.2%20675.3%20206.7%29%22/%3E%0A%3Cellipse%20cx%3D%22664.1%22%20cy%3D%22222.1%22%20rx%3D%229.1%22%20ry%3D%225.2%22%20transform%3D%22rotate%2898.6%20664.1%20222.1%29%22/%3E%0A%3Cellipse%20cx%3D%22655.2%22%20cy%3D%22233.3%22%20rx%3D%229.1%22%20ry%3D%225.2%22%20transform%3D%22rotate%28158.6%20655.2%20233.3%29%22/%3E%0A%3Cellipse%20cx%3D%22641.1%22%20cy%3D%22231.2%22%20rx%3D%229.1%22%20ry%3D%225.2%22%20transform%3D%22rotate%28218.6%20641.1%20231.2%29%22/%3E%0A%3Cellipse%20cx%3D%22635.9%22%20cy%3D%22217.9%22%20rx%3D%229.1%22%20ry%3D%225.2%22%20transform%3D%22rotate%28278.6%20635.9%20217.9%29%22/%3E%0A%3Cellipse%20cx%3D%22644.8%22%20cy%3D%22206.7%22%20rx%3D%229.1%22%20ry%3D%225.2%22%20transform%3D%22rotate%28338.6%20644.8%20206.7%29%22/%3E%0A%3Cellipse%20cx%3D%22658.9%22%20cy%3D%22208.8%22%20rx%3D%229.1%22%20ry%3D%225.2%22%20transform%3D%22rotate%28398.6%20658.9%20208.8%29%22/%3E%0A%3Ccircle%20cx%3D%22650%22%20cy%3D%22220%22%20r%3D%223.9%22/%3E%0A%3C/g%3E%0A%3Cg%20stroke%3D%22var%28--rose%29%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20opacity%3D%220.8%22%3E%0A%3Cellipse%20cx%3D%221039.1%22%20cy%3D%22900.0%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%2890.0%201039.1%20900.0%29%22/%3E%0A%3Cellipse%20cx%3D%221031.6%22%20cy%3D%22923.0%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28126.0%201031.6%20923.0%29%22/%3E%0A%3Cellipse%20cx%3D%221012.1%22%20cy%3D%22937.2%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28162.0%201012.1%20937.2%29%22/%3E%0A%3Cellipse%20cx%3D%22987.9%22%20cy%3D%22937.2%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28198.0%20987.9%20937.2%29%22/%3E%0A%3Cellipse%20cx%3D%22968.4%22%20cy%3D%22923.0%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28234.0%20968.4%20923.0%29%22/%3E%0A%3Cellipse%20cx%3D%22960.9%22%20cy%3D%22900.0%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28270.0%20960.9%20900.0%29%22/%3E%0A%3Cellipse%20cx%3D%22968.4%22%20cy%3D%22877.0%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28306.0%20968.4%20877.0%29%22/%3E%0A%3Cellipse%20cx%3D%22987.9%22%20cy%3D%22862.8%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28342.0%20987.9%20862.8%29%22/%3E%0A%3Cellipse%20cx%3D%221012.1%22%20cy%3D%22862.8%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28378.0%201012.1%20862.8%29%22/%3E%0A%3Cellipse%20cx%3D%221031.6%22%20cy%3D%22877.0%22%20rx%3D%2217.25%22%20ry%3D%229.2%22%20transform%3D%22rotate%28414.0%201031.6%20877.0%29%22/%3E%0A%3Cellipse%20cx%3D%221024.2%22%20cy%3D%22907.5%22%20rx%3D%2212.65%22%20ry%3D%226.9%22%20transform%3D%22rotate%28107.2%201024.2%20907.5%29%22/%3E%0A%3Cellipse%20cx%3D%221011.8%22%20cy%3D%22922.4%22%20rx%3D%2212.65%22%20ry%3D%226.9%22%20transform%3D%22rotate%28152.2%201011.8%20922.4%29%22/%3E%0A%3Cellipse%20cx%3D%22992.5%22%20cy%3D%22924.2%22%20rx%3D%2212.65%22%20ry%3D%226.9%22%20transform%3D%22rotate%28197.2%20992.5%20924.2%29%22/%3E%0A%3Cellipse%20cx%3D%22977.6%22%20cy%3D%22911.8%22%20rx%3D%2212.65%22%20ry%3D%226.9%22%20transform%3D%22rotate%28242.2%20977.6%20911.8%29%22/%3E%0A%3Cellipse%20cx%3D%22975.8%22%20cy%3D%22892.5%22%20rx%3D%2212.65%22%20ry%3D%226.9%22%20transform%3D%22rotate%28287.2%20975.8%20892.5%29%22/%3E%0A%3Cellipse%20cx%3D%22988.2%22%20cy%3D%22877.6%22%20rx%3D%2212.65%22%20ry%3D%226.9%22%20transform%3D%22rotate%28332.2%20988.2%20877.6%29%22/%3E%0A%3Cellipse%20cx%3D%221007.5%22%20cy%3D%22875.8%22%20rx%3D%2212.65%22%20ry%3D%226.9%22%20transform%3D%22rotate%28377.2%201007.5%20875.8%29%22/%3E%0A%3Cellipse%20cx%3D%221022.4%22%20cy%3D%22888.2%22%20rx%3D%2212.65%22%20ry%3D%226.9%22%20transform%3D%22rotate%28422.2%201022.4%20888.2%29%22/%3E%0A%3Cellipse%20cx%3D%221012.5%22%20cy%3D%22901.9%22%20rx%3D%228.05%22%20ry%3D%224.6%22%20transform%3D%22rotate%2898.6%201012.5%20901.9%29%22/%3E%0A%3Cellipse%20cx%3D%221004.6%22%20cy%3D%22911.8%22%20rx%3D%228.05%22%20ry%3D%224.6%22%20transform%3D%22rotate%28158.6%201004.6%20911.8%29%22/%3E%0A%3Cellipse%20cx%3D%22992.1%22%20cy%3D%22909.9%22%20rx%3D%228.05%22%20ry%3D%224.6%22%20transform%3D%22rotate%28218.6%20992.1%20909.9%29%22/%3E%0A%3Cellipse%20cx%3D%22987.5%22%20cy%3D%22898.1%22%20rx%3D%228.05%22%20ry%3D%224.6%22%20transform%3D%22rotate%28278.6%20987.5%20898.1%29%22/%3E%0A%3Cellipse%20cx%3D%22995.4%22%20cy%3D%22888.2%22%20rx%3D%228.05%22%20ry%3D%224.6%22%20transform%3D%22rotate%28338.6%20995.4%20888.2%29%22/%3E%0A%3Cellipse%20cx%3D%221007.9%22%20cy%3D%22890.1%22%20rx%3D%228.05%22%20ry%3D%224.6%22%20transform%3D%22rotate%28398.6%201007.9%20890.1%29%22/%3E%0A%3Ccircle%20cx%3D%221000%22%20cy%3D%22900%22%20r%3D%223.4%22/%3E%0A%3C/g%3E%0A%3Cg%20stroke%3D%22var%28--rosegold%29%22%20stroke-width%3D%221.7%22%20fill%3D%22none%22%20opacity%3D%220.85%22%3E%0A%3Cpath%20d%3D%22M%20774.6%2C600.0%20C%20774.6%2C600.2%20774.8%2C600.9%20774.8%2C601.3%20C%20774.8%2C601.8%20774.7%2C602.3%20774.5%2C602.7%20C%20774.4%2C603.2%20774.2%2C603.7%20773.9%2C604.1%20C%20773.6%2C604.5%20773.2%2C605.0%20772.8%2C605.3%20C%20772.4%2C605.7%20771.9%2C606.0%20771.3%2C606.2%20C%20770.8%2C606.4%20770.2%2C606.6%20769.6%2C606.7%20C%20769.0%2C606.8%20768.3%2C606.8%20767.7%2C606.7%20C%20767.1%2C606.5%20766.4%2C606.4%20765.8%2C606.1%20C%20765.2%2C605.8%20764.6%2C605.4%20764.0%2C604.9%20C%20763.5%2C604.5%20763.0%2C603.9%20762.6%2C603.3%20C%20762.2%2C602.7%20761.9%2C602.0%20761.7%2C601.2%20C%20761.4%2C600.5%20761.3%2C599.7%20761.3%2C598.9%20C%20761.3%2C598.1%20761.4%2C597.3%20761.6%2C596.5%20C%20761.8%2C595.7%20762.1%2C594.8%20762.6%2C594.1%20C%20763.0%2C593.4%20763.6%2C592.7%20764.2%2C592.0%20C%20764.9%2C591.4%20765.6%2C590.9%20766.5%2C590.5%20C%20767.3%2C590.0%20768.2%2C589.7%20769.1%2C589.5%20C%20770.1%2C589.3%20771.1%2C589.2%20772.0%2C589.3%20C%20773.0%2C589.4%20774.0%2C589.6%20775.0%2C589.9%20C%20775.9%2C590.3%20776.9%2C590.8%20777.7%2C591.4%20C%20778.6%2C592.0%20779.4%2C592.8%20780.1%2C593.6%20C%20780.7%2C594.5%20781.3%2C595.4%20781.8%2C596.5%20C%20782.2%2C597.5%20782.5%2C598.6%20782.6%2C599.7%20C%20782.8%2C600.9%20782.7%2C602.1%20782.6%2C603.2%20C%20782.4%2C604.4%20782.0%2C605.6%20781.5%2C606.7%20C%20781.0%2C607.8%20780.4%2C608.8%20779.6%2C609.8%20C%20778.8%2C610.7%20777.8%2C611.6%20776.8%2C612.3%20C%20775.7%2C613.0%20774.5%2C613.6%20773.3%2C614.0%20C%20772.1%2C614.4%20770.7%2C614.6%20769.4%2C614.7%20C%20768.1%2C614.8%20766.0%2C614.4%20765.3%2C614.3%20%22/%3E%0A%3Cellipse%20cx%3D%22789.6%22%20cy%3D%22619.4%22%20rx%3D%2225.3%22%20ry%3D%2214.9%22%20transform%3D%22rotate%28134.7%20789.6%20619.4%29%22/%3E%0A%3Cellipse%20cx%3D%22750.6%22%20cy%3D%22619.6%22%20rx%3D%2225.3%22%20ry%3D%2214.9%22%20transform%3D%22rotate%28224.7%20750.6%20619.6%29%22/%3E%0A%3Cellipse%20cx%3D%22750.4%22%20cy%3D%22580.6%22%20rx%3D%2225.3%22%20ry%3D%2214.9%22%20transform%3D%22rotate%28314.7%20750.4%20580.6%29%22/%3E%0A%3Cellipse%20cx%3D%22789.4%22%20cy%3D%22580.4%22%20rx%3D%2225.3%22%20ry%3D%2214.9%22%20transform%3D%22rotate%28404.7%20789.4%20580.4%29%22/%3E%0A%3C/g%3E%0A%3Cg%20stroke%3D%22var%28--rosegold%29%22%20stroke-width%3D%221.7%22%20fill%3D%22none%22%20opacity%3D%220.85%22%3E%0A%3Cpath%20d%3D%22M%201104.0%2C1260.0%20C%201104.0%2C1260.2%201104.2%2C1260.8%201104.1%2C1261.2%20C%201104.1%2C1261.6%201104.1%2C1262.0%201103.9%2C1262.4%20C%201103.8%2C1262.8%201103.6%2C1263.2%201103.4%2C1263.6%20C%201103.1%2C1264.0%201102.8%2C1264.3%201102.4%2C1264.6%20C%201102.0%2C1264.9%201101.6%2C1265.2%201101.1%2C1265.4%20C%201100.7%2C1265.6%201100.2%2C1265.7%201099.6%2C1265.8%20C%201099.1%2C1265.9%201098.5%2C1265.9%201098.0%2C1265.8%20C%201097.4%2C1265.7%201096.9%2C1265.5%201096.3%2C1265.3%20C%201095.8%2C1265.0%201095.3%2C1264.7%201094.8%2C1264.3%20C%201094.4%2C1263.9%201093.9%2C1263.4%201093.6%2C1262.9%20C%201093.2%2C1262.3%201092.9%2C1261.7%201092.7%2C1261.1%20C%201092.5%2C1260.4%201092.4%2C1259.7%201092.4%2C1259.0%20C%201092.4%2C1258.4%201092.5%2C1257.6%201092.7%2C1256.9%20C%201092.9%2C1256.2%201093.2%2C1255.5%201093.5%2C1254.9%20C%201093.9%2C1254.2%201094.4%2C1253.6%201095.0%2C1253.1%20C%201095.5%2C1252.6%201096.2%2C1252.1%201096.9%2C1251.7%20C%201097.6%2C1251.3%201098.4%2C1251.0%201099.2%2C1250.9%20C%201100.0%2C1250.7%201100.9%2C1250.6%201101.8%2C1250.7%20C%201102.6%2C1250.8%201103.5%2C1251.0%201104.3%2C1251.3%20C%201105.2%2C1251.6%201106.0%2C1252.0%201106.7%2C1252.5%20C%201107.5%2C1253.1%201108.2%2C1253.7%201108.8%2C1254.4%20C%201109.3%2C1255.2%201109.8%2C1256.0%201110.2%2C1256.9%20C%201110.6%2C1257.8%201110.9%2C1258.8%201111.0%2C1259.8%20C%201111.1%2C1260.8%201111.1%2C1261.8%201110.9%2C1262.8%20C%201110.8%2C1263.8%201110.5%2C1264.8%201110.0%2C1265.8%20C%201109.6%2C1266.7%201109.0%2C1267.7%201108.3%2C1268.5%20C%201107.6%2C1269.3%201106.8%2C1270.1%201105.9%2C1270.7%20C%201105.0%2C1271.3%201103.9%2C1271.8%201102.9%2C1272.2%20C%201101.8%2C1272.5%201100.6%2C1272.7%201099.5%2C1272.8%20C%201098.3%2C1272.8%201096.5%2C1272.5%201096.0%2C1272.5%20%22/%3E%0A%3Cellipse%20cx%3D%221117.1%22%20cy%3D%221276.9%22%20rx%3D%2222.0%22%20ry%3D%2213.0%22%20transform%3D%22rotate%28134.7%201117.1%201276.9%29%22/%3E%0A%3Cellipse%20cx%3D%221083.1%22%20cy%3D%221277.1%22%20rx%3D%2222.0%22%20ry%3D%2213.0%22%20transform%3D%22rotate%28224.7%201083.1%201277.1%29%22/%3E%0A%3Cellipse%20cx%3D%221082.9%22%20cy%3D%221243.1%22%20rx%3D%2222.0%22%20ry%3D%2213.0%22%20transform%3D%22rotate%28314.7%201082.9%201243.1%29%22/%3E%0A%3Cellipse%20cx%3D%221116.9%22%20cy%3D%221242.9%22%20rx%3D%2222.0%22%20ry%3D%2213.0%22%20transform%3D%22rotate%28404.7%201116.9%201242.9%29%22/%3E%0A%3C/g%3E%0A%3Cg%20stroke%3D%22var%28--rose%29%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20opacity%3D%220.8%22%3E%0A%3Cellipse%20cx%3D%22334.0%22%20cy%3D%221280.0%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%2890.0%20334.0%201280.0%29%22/%3E%0A%3Cellipse%20cx%3D%22327.5%22%20cy%3D%221300.0%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28126.0%20327.5%201300.0%29%22/%3E%0A%3Cellipse%20cx%3D%22310.5%22%20cy%3D%221312.3%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28162.0%20310.5%201312.3%29%22/%3E%0A%3Cellipse%20cx%3D%22289.5%22%20cy%3D%221312.3%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28198.0%20289.5%201312.3%29%22/%3E%0A%3Cellipse%20cx%3D%22272.5%22%20cy%3D%221300.0%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28234.0%20272.5%201300.0%29%22/%3E%0A%3Cellipse%20cx%3D%22266.0%22%20cy%3D%221280.0%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28270.0%20266.0%201280.0%29%22/%3E%0A%3Cellipse%20cx%3D%22272.5%22%20cy%3D%221260.0%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28306.0%20272.5%201260.0%29%22/%3E%0A%3Cellipse%20cx%3D%22289.5%22%20cy%3D%221247.7%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28342.0%20289.5%201247.7%29%22/%3E%0A%3Cellipse%20cx%3D%22310.5%22%20cy%3D%221247.7%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28378.0%20310.5%201247.7%29%22/%3E%0A%3Cellipse%20cx%3D%22327.5%22%20cy%3D%221260.0%22%20rx%3D%2215.0%22%20ry%3D%228.0%22%20transform%3D%22rotate%28414.0%20327.5%201260.0%29%22/%3E%0A%3Cellipse%20cx%3D%22321.0%22%20cy%3D%221286.5%22%20rx%3D%2211.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28107.2%20321.0%201286.5%29%22/%3E%0A%3Cellipse%20cx%3D%22310.3%22%20cy%3D%221299.5%22%20rx%3D%2211.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28152.2%20310.3%201299.5%29%22/%3E%0A%3Cellipse%20cx%3D%22293.5%22%20cy%3D%221301.0%22%20rx%3D%2211.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28197.2%20293.5%201301.0%29%22/%3E%0A%3Cellipse%20cx%3D%22280.5%22%20cy%3D%221290.3%22%20rx%3D%2211.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28242.2%20280.5%201290.3%29%22/%3E%0A%3Cellipse%20cx%3D%22279.0%22%20cy%3D%221273.5%22%20rx%3D%2211.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28287.2%20279.0%201273.5%29%22/%3E%0A%3Cellipse%20cx%3D%22289.7%22%20cy%3D%221260.5%22%20rx%3D%2211.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28332.2%20289.7%201260.5%29%22/%3E%0A%3Cellipse%20cx%3D%22306.5%22%20cy%3D%221259.0%22%20rx%3D%2211.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28377.2%20306.5%201259.0%29%22/%3E%0A%3Cellipse%20cx%3D%22319.5%22%20cy%3D%221269.7%22%20rx%3D%2211.0%22%20ry%3D%226.0%22%20transform%3D%22rotate%28422.2%20319.5%201269.7%29%22/%3E%0A%3Cellipse%20cx%3D%22310.9%22%20cy%3D%221281.6%22%20rx%3D%227.0%22%20ry%3D%224.0%22%20transform%3D%22rotate%2898.6%20310.9%201281.6%29%22/%3E%0A%3Cellipse%20cx%3D%22304.0%22%20cy%3D%221290.2%22%20rx%3D%227.0%22%20ry%3D%224.0%22%20transform%3D%22rotate%28158.6%20304.0%201290.2%29%22/%3E%0A%3Cellipse%20cx%3D%22293.1%22%20cy%3D%221288.6%22%20rx%3D%227.0%22%20ry%3D%224.0%22%20transform%3D%22rotate%28218.6%20293.1%201288.6%29%22/%3E%0A%3Cellipse%20cx%3D%22289.1%22%20cy%3D%221278.4%22%20rx%3D%227.0%22%20ry%3D%224.0%22%20transform%3D%22rotate%28278.6%20289.1%201278.4%29%22/%3E%0A%3Cellipse%20cx%3D%22296.0%22%20cy%3D%221269.8%22%20rx%3D%227.0%22%20ry%3D%224.0%22%20transform%3D%22rotate%28338.6%20296.0%201269.8%29%22/%3E%0A%3Cellipse%20cx%3D%22306.9%22%20cy%3D%221271.4%22%20rx%3D%227.0%22%20ry%3D%224.0%22%20transform%3D%22rotate%28398.6%20306.9%201271.4%29%22/%3E%0A%3Ccircle%20cx%3D%22300%22%20cy%3D%221280%22%20r%3D%223.0%22/%3E%0A%3C/g%3E%0A%3C/svg%3E") !important;
-    background-repeat: repeat !important;
-    background-size: 1400px 1400px !important;
+    background:
+        radial-gradient(ellipse 320px 180px at 10% 92%, rgba(140,165,195,0.40), transparent 70%),
+        radial-gradient(ellipse 360px 190px at 30% 96%, rgba(140,165,195,0.38), transparent 70%),
+        radial-gradient(ellipse 340px 185px at 52% 90%, rgba(140,165,195,0.35), transparent 70%),
+        radial-gradient(ellipse 380px 195px at 72% 95%, rgba(140,165,195,0.40), transparent 70%),
+        radial-gradient(ellipse 300px 175px at 90% 88%, rgba(140,165,195,0.35), transparent 70%),
+        radial-gradient(ellipse 260px 150px at 20% 78%, rgba(140,165,195,0.28), transparent 70%),
+        radial-gradient(ellipse 280px 155px at 60% 80%, rgba(140,165,195,0.30), transparent 70%),
+        radial-gradient(ellipse 240px 140px at 85% 72%, rgba(140,165,195,0.25), transparent 70%),
+        radial-gradient(ellipse 138px 86px at 21% 89%, rgba(255,255,255,0.94), transparent 58%),
+        radial-gradient(ellipse 92px 57px at 64% 76%, rgba(255,255,255,0.98), transparent 58%),
+        radial-gradient(ellipse 219px 136px at 24% 81%, rgba(255,255,255,0.92), transparent 58%),
+        radial-gradient(ellipse 173px 107px at 87% 87%, rgba(255,255,255,0.87), transparent 58%),
+        radial-gradient(ellipse 158px 98px at 65% 98%, rgba(255,255,255,0.96), transparent 58%),
+        radial-gradient(ellipse 189px 117px at 69% 76%, rgba(255,255,255,0.94), transparent 58%),
+        radial-gradient(ellipse 203px 126px at 28% 75%, rgba(255,255,255,0.92), transparent 58%),
+        radial-gradient(ellipse 183px 113px at 74% 99%, rgba(255,255,255,0.99), transparent 58%),
+        radial-gradient(ellipse 148px 92px at 38% 96%, rgba(255,255,255,0.99), transparent 58%),
+        radial-gradient(ellipse 108px 67px at 92% 77%, rgba(255,255,255,0.88), transparent 58%),
+        radial-gradient(ellipse 171px 106px at 101% 86%, rgba(255,255,255,0.90), transparent 58%),
+        radial-gradient(ellipse 136px 84px at 51% 85%, rgba(255,255,255,0.94), transparent 58%),
+        radial-gradient(ellipse 179px 111px at 59% 99%, rgba(255,255,255,0.99), transparent 58%),
+        radial-gradient(ellipse 177px 110px at 89% 102%, rgba(255,255,255,0.87), transparent 58%),
+        radial-gradient(ellipse 208px 129px at 90% 101%, rgba(255,255,255,0.94), transparent 58%),
+        radial-gradient(ellipse 198px 123px at 74% 80%, rgba(255,255,255,0.94), transparent 58%),
+        radial-gradient(ellipse 201px 125px at 26% 76%, rgba(255,255,255,1.00), transparent 58%),
+        radial-gradient(ellipse 143px 89px at 5% 96%, rgba(255,255,255,0.87), transparent 58%),
+        radial-gradient(ellipse 203px 126px at 27% 96%, rgba(255,255,255,0.86), transparent 58%),
+        radial-gradient(ellipse 183px 114px at 63% 75%, rgba(255,255,255,0.90), transparent 58%),
+        radial-gradient(ellipse 156px 97px at 92% 101%, rgba(255,255,255,1.00), transparent 58%),
+        radial-gradient(ellipse 168px 104px at 29% 76%, rgba(255,255,255,0.85), transparent 58%),
+        radial-gradient(ellipse 169px 105px at 17% 85%, rgba(255,255,255,0.87), transparent 58%),
+        radial-gradient(ellipse 131px 81px at -0% 98%, rgba(255,255,255,0.99), transparent 58%),
+        radial-gradient(ellipse 150px 93px at 94% 85%, rgba(255,255,255,0.93), transparent 58%),
+        radial-gradient(ellipse 163px 101px at 66% 91%, rgba(255,255,255,0.94), transparent 58%),
+        radial-gradient(ellipse 175px 101px at 94% 61%, rgba(255,255,255,0.77), transparent 58%),
+        radial-gradient(ellipse 257px 149px at 24% 54%, rgba(255,255,255,0.71), transparent 58%),
+        radial-gradient(ellipse 172px 100px at 55% 45%, rgba(255,255,255,0.72), transparent 58%),
+        radial-gradient(ellipse 205px 119px at 2% 64%, rgba(255,255,255,0.57), transparent 58%),
+        radial-gradient(ellipse 212px 123px at 63% 59%, rgba(255,255,255,0.66), transparent 58%),
+        radial-gradient(ellipse 113px 66px at 71% 68%, rgba(255,255,255,0.57), transparent 58%),
+        radial-gradient(ellipse 148px 86px at 68% 75%, rgba(255,255,255,0.69), transparent 58%),
+        radial-gradient(ellipse 165px 95px at 59% 55%, rgba(255,255,255,0.64), transparent 58%),
+        radial-gradient(ellipse 155px 90px at 37% 63%, rgba(255,255,255,0.66), transparent 58%),
+        radial-gradient(ellipse 195px 113px at 77% 46%, rgba(255,255,255,0.77), transparent 58%),
+        radial-gradient(ellipse 231px 134px at 31% 52%, rgba(255,255,255,0.62), transparent 58%),
+        radial-gradient(ellipse 215px 125px at 19% 58%, rgba(255,255,255,0.58), transparent 58%),
+        radial-gradient(ellipse 292px 102px at 32% 17%, rgba(255,255,255,0.29), transparent 58%),
+        radial-gradient(ellipse 207px 73px at 86% 11%, rgba(255,255,255,0.33), transparent 58%),
+        radial-gradient(ellipse 188px 66px at 88% 21%, rgba(255,255,255,0.22), transparent 58%),
+        radial-gradient(ellipse 287px 101px at 53% 12%, rgba(255,255,255,0.37), transparent 58%),
+        radial-gradient(ellipse 287px 101px at 18% 15%, rgba(255,255,255,0.33), transparent 58%),
+        radial-gradient(ellipse 172px 60px at 81% 17%, rgba(255,255,255,0.26), transparent 58%),
+        linear-gradient(180deg, transparent 0%, transparent 55%, rgba(255,255,255,0.55) 80%, rgba(255,255,255,0.92) 100%),
+        linear-gradient(180deg, #4A85C0 0%, #6FA3D8 20%, #9AC3E8 38%, #C3DEF2 56%, #E4F1FB 75%, #F5FAFE 100%)
+        !important;
     background-attachment: fixed !important;
 }
 
 .vt-card {
-    background: linear-gradient(160deg, #171B36 0%, #12152A 100%);
-    border: 1px solid rgba(217, 180, 90, 0.25);
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.85);
     border-radius: 14px;
     padding: 1.1rem 1.4rem;
     margin-bottom: 0.9rem;
+    box-shadow: 0 4px 24px rgba(70, 110, 150, 0.15);
 }
 .vt-card-label {
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #A9A6C4;
+    color: #5A7290;
     margin-bottom: 0.35rem;
 }
 .vt-card-value {
     font-size: 1.3rem;
     font-weight: 600;
-    color: #F2EFE9;
+    color: #1F2A37;
     white-space: normal;
     word-break: break-word;
     line-height: 1.3;
@@ -82,19 +138,19 @@ hr {
     margin-top: 0.6rem;
 }
 .vt-badge-active {
-    background: rgba(110, 231, 168, 0.14);
-    color: #6EE7A8;
-    border: 1px solid rgba(110, 231, 168, 0.4);
+    background: rgba(34, 150, 90, 0.14);
+    color: #1F7A4D;
+    border: 1px solid rgba(34, 150, 90, 0.4);
 }
 .vt-badge-upcoming {
-    background: rgba(217, 180, 90, 0.14);
-    color: #D9B45A;
-    border: 1px solid rgba(217, 180, 90, 0.35);
+    background: rgba(184, 134, 11, 0.14);
+    color: #8A6415;
+    border: 1px solid rgba(184, 134, 11, 0.4);
 }
 .vt-badge-neutral {
-    background: rgba(255, 255, 255, 0.06);
-    color: #A9A6C4;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(90, 114, 144, 0.12);
+    color: #4B5768;
+    border: 1px solid rgba(90, 114, 144, 0.3);
 }
 </style>
 """

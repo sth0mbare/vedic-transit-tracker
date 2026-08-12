@@ -230,15 +230,15 @@ def _render_current_dasha(chart) -> None:
         category_orders={"Lord": [p.lord for p in sequence]},
         color_discrete_map=GRAHA_COLORS,
     )
-    fig.add_vline(x=now, line_width=2, line_dash="dash", line_color="#D9B45A")
+    fig.add_vline(x=now, line_width=2, line_dash="dash", line_color="#B8860B")
     fig.update_yaxes(visible=False, title=None)
-    fig.update_xaxes(showgrid=False, color="#F2EFE9")
+    fig.update_xaxes(showgrid=False, color="#1F2A37")
     fig.update_layout(
         height=180,
         margin=dict(l=0, r=0, t=10, b=0),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#F2EFE9", family="Inter, sans-serif"),
+        font=dict(color="#1F2A37", family="Inter, sans-serif"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, title=None),
     )
     st.plotly_chart(fig, use_container_width=True)
