@@ -20,6 +20,7 @@ import pytest
 from vedic_astro.chart import compute_natal_chart
 from vedic_astro.constants import SUN, VENUS
 from vedic_astro.dasha import current_dasha, full_mahadasha_sequence, mahadasha_periods_for_lords
+from vedic_astro.horoscope import compute_weekly_horoscope
 from vedic_astro.transits import compute_guru_gochar, compute_sade_sati, compute_transits
 from vedic_astro.util import angular_separation
 
@@ -184,3 +185,25 @@ def test_transits_combustion_and_next_sign_change(natal_chart):
     for name, placement in transits.items():
         assert placement.next_sign_change is not None
         assert placement.next_sign_change > BIRTH_DT
+
+
+def test_weekly_horoscope_at_birth(natal_chart):
+    transits = compute_transits(natal_chart, at_dt=BIRTH_DT)
+    horoscope = compute_weekly_horoscope(natal_chart, transits, start_dt=BIRTH_DT)
+
+    assert horoscope.start.isoformat() == "1990-05-15"
+    assert horoscope.end.isoformat() == "1990-05-22"
+
+    # Moon starts the week in its natal sign (Makara, house 1 from itself)
+    # and should visibly progress through at least one more sign in a week
+    # (it changes sign roughly every ~2.25 days).
+    assert horoscope.moon_journey[0].rashi == "Makara"
+    assert horoscope.moon_journey[0].house_from_moon == 1
+    assert len(horoscope.moon_journey) >= 2
+    for earlier, later in zip(horoscope.moon_journey, horoscope.moon_journey[1:]):
+        assert later.start > earlier.start
+
+    # Moon's own next_sign_change (from the transits dict) should fall
+    # within the week and correspond to the journey's first transition.
+    assert "Moon" in horoscope.upcoming_sign_changes
+    assert horoscope.upcoming_sign_changes["Moon"].next_sign_change.date() <= horoscope.moon_journey[1].start

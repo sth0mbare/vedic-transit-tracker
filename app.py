@@ -21,6 +21,7 @@ from vedic_astro.dasha import (
     full_mahadasha_sequence,
     mahadasha_periods_for_lords,
 )
+from vedic_astro.horoscope import compute_weekly_horoscope
 from vedic_astro.transits import (
     COMBUST_OVERVIEW_BLURB,
     GURU_GOCHAR_OVERVIEW_BLURB,
@@ -108,6 +109,20 @@ def _render_live_transits(chart) -> None:
     if combust_names:
         st.warning(f"Currently combust: {', '.join(combust_names)}")
         st.caption(COMBUST_OVERVIEW_BLURB)
+
+    st.divider()
+    st.subheader("This Week's Horoscope")
+    horoscope = compute_weekly_horoscope(chart, transits, start_dt=now, ayanamsa_name=chart.ayanamsa)
+    st.caption(f"{horoscope.start} to {horoscope.end}")
+
+    moon_text = " → ".join(rashi_display_name(m.rashi) for m in horoscope.moon_journey)
+    card("Moon's Journey This Week", moon_text)
+
+    other_changes = {name: t for name, t in horoscope.upcoming_sign_changes.items() if name != "Moon"}
+    if other_changes:
+        st.markdown("**Other notable transits this week:**")
+        for name, t in other_changes.items():
+            st.markdown(f"- **{name}** moves into a new sign around {t.next_sign_change.date()}")
 
     with st.expander("What do these houses mean?"):
         st.caption("Houses are counted from your natal Moon -- the traditional Vedic reference point for gochara.")
