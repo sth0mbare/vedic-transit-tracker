@@ -13,7 +13,7 @@ import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
 from common import birth_details_form, get_chart
-from styling import badge, card, inject_theme
+from styling import GRAHA_COLORS, badge, card, inject_theme
 from vedic_astro.constants import SUN, VENUS
 from vedic_astro.dasha import (
     DASHA_OVERVIEW_BLURB,
@@ -228,6 +228,7 @@ def _render_current_dasha(chart) -> None:
         y="Dasha",
         color="Lord",
         category_orders={"Lord": [p.lord for p in sequence]},
+        color_discrete_map=GRAHA_COLORS,
     )
     fig.add_vline(x=now, line_width=2, line_dash="dash", line_color="#D9B45A")
     fig.update_yaxes(visible=False, title=None)
