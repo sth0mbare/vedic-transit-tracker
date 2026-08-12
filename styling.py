@@ -152,6 +152,13 @@ hr {
     color: #4B5768;
     border: 1px solid rgba(90, 114, 144, 0.3);
 }
+
+.vt-footer {
+    text-align: center;
+    font-size: 0.82rem;
+    color: #5A7290;
+    padding: 0.5rem 0 1.5rem;
+}
 </style>
 """
 

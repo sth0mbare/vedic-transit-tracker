@@ -38,7 +38,7 @@ from vedic_astro.util import rashi_display_name
 
 LIVE_TRANSITS_REFRESH_MS = 30_000
 
-st.set_page_config(page_title="Vedic Transit & Dasha Calculator", page_icon="🪐", layout="centered")
+st.set_page_config(page_title="Vedic Horoscope, Transit, & Dasha Calculator", page_icon="🪐", layout="centered")
 inject_theme()
 
 
@@ -278,7 +278,7 @@ def _render_mahadasha(chart) -> None:
             card(f"{lord} Mahadasha", f"{period.start.date()} → {period.end.date()}", status_badge)
 
 
-st.title("🪐 Vedic Transit & Dasha Calculator")
+st.title("🪐 Vedic Horoscope, Transit, & Dasha Calculator")
 st.caption("Sidereal (Lahiri) Vedic astrology.")
 
 birth_details_form()
@@ -305,3 +305,9 @@ if chart:
         _render_mahadasha(chart)
 else:
     st.info("Enter your birth details above and click **Compute chart** to get started.")
+
+st.divider()
+st.markdown(
+    '<div class="vt-footer">© 2026 Shivani Thombare</div>',
+    unsafe_allow_html=True,
+)
