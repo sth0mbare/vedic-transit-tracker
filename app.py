@@ -5,7 +5,7 @@ Sun & Venus Mahadasha, ...) via tabs. Each tab is a self-contained,
 single-purpose view built on the same `vedic_astro` core library.
 """
 
-from datetime import datetime, timezone
+from datetime import date, datetime, time, timezone
 
 import pandas as pd
 import plotly.express as px
@@ -76,14 +76,8 @@ def _render_natal_chart(chart) -> None:
     st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
 
 
-def _render_live_transits(chart) -> None:
-    st_autorefresh(interval=LIVE_TRANSITS_REFRESH_MS, key="live_transits_autorefresh")
-
-    now = datetime.now(timezone.utc)
-    st.caption(f"Live · last updated {now.strftime('%H:%M:%S')} UTC · refreshes every 30s")
-
-    transits = compute_transits(chart, at_dt=now, ayanamsa_name=chart.ayanamsa)
-    rows = [
+def _transit_rows(transits) -> list[dict]:
+    return [
         {
             "Graha": name,
             "Rashi": rashi_display_name(t.rashi),
@@ -98,7 +92,16 @@ def _render_live_transits(chart) -> None:
         }
         for name, t in transits.items()
     ]
-    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+
+
+def _render_live_transits(chart) -> None:
+    st_autorefresh(interval=LIVE_TRANSITS_REFRESH_MS, key="live_transits_autorefresh")
+
+    now = datetime.now(timezone.utc)
+    st.caption(f"Live · last updated {now.strftime('%H:%M:%S')} UTC · refreshes every 30s")
+
+    transits = compute_transits(chart, at_dt=now, ayanamsa_name=chart.ayanamsa)
+    st.dataframe(pd.DataFrame(_transit_rows(transits)), hide_index=True, use_container_width=True)
 
     retrograde_names = [name for name, t in transits.items() if t.retrograde]
     if retrograde_names:
@@ -129,6 +132,38 @@ def _render_live_transits(chart) -> None:
         st.caption("Houses are counted from your natal Moon -- the traditional Vedic reference point for gochara.")
         for house_num, signification in HOUSE_SIGNIFICATIONS_FROM_MOON.items():
             st.markdown(f"**House {house_num}** — {signification}")
+
+
+def _render_past_transits(chart) -> None:
+    st.caption("Look up where the grahas were, relative to your natal chart, on any date in the past.")
+
+    today = datetime.now(timezone.utc).date()
+    col1, col2 = st.columns(2)
+    with col1:
+        query_date = st.date_input(
+            "Date", value=today, min_value=date(1900, 1, 1), max_value=today, key="past_transits_date"
+        )
+    with col2:
+        query_time = st.time_input("Time (UTC)", value=time(12, 0), key="past_transits_time")
+
+    at_dt = datetime.combine(query_date, query_time, tzinfo=timezone.utc)
+    if at_dt > datetime.now(timezone.utc):
+        st.error("Please pick a date/time in the past.")
+        return
+
+    transits = compute_transits(chart, at_dt=at_dt, ayanamsa_name=chart.ayanamsa)
+    st.caption(f"Transits as of {at_dt.strftime('%Y-%m-%d %H:%M')} UTC")
+    st.dataframe(pd.DataFrame(_transit_rows(transits)), hide_index=True, use_container_width=True)
+
+    retrograde_names = [name for name, t in transits.items() if t.retrograde]
+    if retrograde_names:
+        st.warning(f"Retrograde on this date: {', '.join(retrograde_names)}")
+        st.caption(RETROGRADE_OVERVIEW_BLURB)
+
+    combust_names = [name for name, t in transits.items() if t.combust]
+    if combust_names:
+        st.warning(f"Combust on this date: {', '.join(combust_names)}")
+        st.caption(COMBUST_OVERVIEW_BLURB)
 
 
 def _render_sade_sati(chart) -> None:
@@ -289,13 +324,23 @@ if chart:
     st.divider()
     st.caption(f"{place.address} · {place.timezone} · Ayanamsa: {chart.ayanamsa}")
 
-    tab_natal, tab_live, tab_sade_sati, tab_guru_gochar, tab_current_dasha, tab_mahadasha = st.tabs(
-        ["Natal Chart", "Live Transits", "Sade Sati", "Guru Gochar", "Current Dasha", "Sun & Venus Mahadasha"]
+    tab_natal, tab_live, tab_past, tab_sade_sati, tab_guru_gochar, tab_current_dasha, tab_mahadasha = st.tabs(
+        [
+            "Natal Chart",
+            "Live Transits",
+            "Past Transits",
+            "Sade Sati",
+            "Guru Gochar",
+            "Current Dasha",
+            "Sun & Venus Mahadasha",
+        ]
     )
     with tab_natal:
         _render_natal_chart(chart)
     with tab_live:
         _render_live_transits(chart)
+    with tab_past:
+        _render_past_transits(chart)
     with tab_sade_sati:
         _render_sade_sati(chart)
     with tab_guru_gochar:
