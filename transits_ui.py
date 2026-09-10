@@ -7,21 +7,38 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import pandas as pd
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
-from vedic_astro.transit_context import compute_snapshot
+from vedic_astro.transit_context import compute_snapshot, TransitSnapshot
+from vedic_astro.timing import HierarchyPeriod
 from vedic_astro.relationship_records import local_instant
-from vedic_astro.horoscope import compute_weekly_horoscope
-from vedic_astro.transits import HOUSE_SIGNIFICATIONS_FROM_MOON, RETROGRADE_OVERVIEW_BLURB, COMBUST_OVERVIEW_BLURB
+from vedic_astro.horoscope import compute_weekly_horoscope, WeeklyHoroscope, MoonDay
+from vedic_astro.transits import HOUSE_SIGNIFICATIONS_FROM_MOON, RETROGRADE_OVERVIEW_BLURB, COMBUST_OVERVIEW_BLURB, TransitPlacement
 from vedic_astro.util import rashi_display_name
 
 
 @st.cache_data(ttl=30, show_spinner=False)
+def _cached_snapshot_data(chart, at):
+    # Cache data rather than module-defined instances: hot reloads can leave
+    # otherwise valid dataclasses with identities that pickle cannot resolve.
+    return asdict(compute_snapshot(chart, at))
+
+
 def cached_snapshot(chart, at):
-    return compute_snapshot(chart, at)
+    data = _cached_snapshot_data(chart, at)
+    return TransitSnapshot(**{**data,
+        'placements': {name: TransitPlacement(**p) for name, p in data['placements'].items()},
+        'periods': tuple(HierarchyPeriod(**p) for p in data['periods'])})
 
 
 @st.cache_data(ttl=30, show_spinner=False)
+def _cached_weekly_data(chart, placements, at):
+    return asdict(compute_weekly_horoscope(chart, placements, start_dt=at, ayanamsa_name=chart.ayanamsa))
+
+
 def weekly_snapshot(chart, placements, at):
-    return compute_weekly_horoscope(chart, placements, start_dt=at, ayanamsa_name=chart.ayanamsa)
+    data = _cached_weekly_data(chart, placements, at)
+    return WeeklyHoroscope(**{**data,
+        'moon_journey': [MoonDay(**p) for p in data['moon_journey']],
+        'upcoming_sign_changes': {name: TransitPlacement(**p) for name, p in data['upcoming_sign_changes'].items()}})
 
 
 def local_text(at, zone):

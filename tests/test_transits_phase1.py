@@ -84,3 +84,39 @@ def test_future_selection_allowed_without_future_calculation(monkeypatch):
     next(b for b in app.button if b.label=='Show transits').click().run()
     assert not app.exception and not app.error
     assert calls[-1].year==2090
+
+
+def test_cache_survives_unpicklable_dataclass_identity(monkeypatch):
+    """Reproduce the serialization failure seen when a module class is stale."""
+    from dataclasses import asdict, make_dataclass
+    import pickle
+    import transits_ui as ui
+    from vedic_astro.horoscope import compute_weekly_horoscope
+    c = chart()
+    expected = compute_snapshot(c, AT)
+    weekly = compute_weekly_horoscope(c, expected.placements, start_dt=AT, ayanamsa_name=c.ayanamsa)
+    # Local classes reproduce pickle's inability to locate a returned class.
+    Stale = make_dataclass('StaleSnapshot', [(k, object) for k in asdict(expected)])
+    stale = Stale(**{k: getattr(expected, k) for k in asdict(expected)})
+    with pytest.raises((pickle.PicklingError, AttributeError)):
+        pickle.dumps(stale)
+    calls=[]
+    def compute(*args):
+        calls.append(1)
+        return stale
+    monkeypatch.setattr(ui, 'compute_snapshot', compute)
+    monkeypatch.setattr(ui, 'compute_weekly_horoscope', lambda *a, **kw: weekly)
+    ui._cached_snapshot_data.clear()
+    ui._cached_weekly_data.clear()
+    try:
+        first=ui.cached_snapshot(c, AT)
+        second=ui.cached_snapshot(c, AT)
+        assert first==second==expected
+        assert len(calls)==1
+        assert ui.weekly_snapshot(c, expected.placements, AT)==weekly
+        assert ui.weekly_snapshot(c, expected.placements, AT)==weekly
+        first.warnings.append('test mutation')
+        assert ui.cached_snapshot(c, AT)==expected
+    finally:
+        ui._cached_snapshot_data.clear()
+        ui._cached_weekly_data.clear()
