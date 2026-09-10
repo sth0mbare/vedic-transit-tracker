@@ -58,3 +58,7 @@ pytest tests/
   approach), not Placidus or other quadrant systems.
 - Rahu is computed as the mean lunar node; Ketu is derived as Rahu + 180°.
 - Dasha and Sade Sati durations use a 365.2425-day solar year approximation.
+
+## Relationship workspace
+
+The **Relationships** sidebar view adds MD/AD/PD lookup, historical and future snapshots, session-only event records with export/import, repeated-signature comparison, sampled future windows, and natal synastry. See [methods, scoring rules and limitations](docs/relationship-workspace.md).

@@ -13,6 +13,7 @@ import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
 from common import birth_details_form, get_chart
+from relationship_ui import render_relationships
 from styling import GRAHA_COLORS, badge, card, inject_theme
 from vedic_astro.constants import SUN, VENUS
 from vedic_astro.dasha import (
@@ -375,6 +376,7 @@ if chart:
         "D4 · Chaturthamsa": lambda: _render_divisional_chart(chart, "Chaturthamsa", compute_chaturthamsa_chart),
         "D9 · Navamsa": lambda: _render_navamsa_chart(chart),
         "D10 · Dasamsa": lambda: _render_divisional_chart(chart, "Dasamsa", compute_dasamsa_chart),
+        "Relationships": lambda: render_relationships(chart, place),
         "Live Transits": lambda: _render_live_transits(chart),
         "Past Transits": lambda: _render_past_transits(chart),
         "Sade Sati": lambda: _render_sade_sati(chart),
