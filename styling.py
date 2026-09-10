@@ -25,16 +25,16 @@ GRAHA_COLORS = {
 
 _CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
 
 html, body, .stApp {
-    --font: 'Source Sans 3', 'Source Sans Pro', sans-serif;
-    font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+    --font: 'Times New Roman', Times, serif;
+    font-family: 'Times New Roman', Times, serif;
 }
 .stApp p, .stApp label, .stApp input, .stApp textarea,
 .stApp select, .stApp button, .stApp table, .stApp [role="tab"],
 .stApp [data-testid="stCaptionContainer"], .vt-card, .vt-badge, .vt-footer {
-    font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif !important;
+    font-family: 'Times New Roman', Times, serif !important;
 }
 
 h1, h2, h3 {
