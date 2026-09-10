@@ -103,6 +103,46 @@ hr {
     background-attachment: fixed !important;
 }
 
+
+/* Phthalo green sidebar with ivory labels and a soft mint selection. */
+[data-testid="stSidebar"] {
+    background: linear-gradient(165deg, #164D40 0%, #123524 100%);
+    color: #F2F7EF;
+    border-right: 1px solid rgba(194, 224, 203, 0.22);
+}
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: #F2F7EF !important;
+}
+[data-testid="stSidebar"] [data-testid="stButton"] button {
+    background: rgba(255, 255, 255, 0.06);
+    color: #F2F7EF;
+    border: 1px solid rgba(194, 224, 203, 0.25);
+    border-radius: 12px;
+    justify-content: flex-start;
+    padding: 0.65rem 0.9rem;
+    transition: background 150ms ease, border-color 150ms ease;
+}
+[data-testid="stSidebar"] [data-testid="stButton"] button:hover {
+    background: #28604C;
+    border-color: #A8CDB5;
+    color: #FFFFFF;
+}
+[data-testid="stSidebar"] [data-testid="stButton"] button[kind="primary"] {
+    background: #D5E8D7;
+    color: #123524;
+    border-color: #D5E8D7;
+    font-weight: 600;
+}
+[data-testid="stSidebar"] [data-testid="stButton"] button:focus-visible {
+    outline: 2px solid #E6CE8F;
+    outline-offset: 3px;
+}
+[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] button {
+    color: #F2F7EF;
+}
+
 .vt-card {
     background: rgba(255, 255, 255, 0.62);
     backdrop-filter: blur(10px);
