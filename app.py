@@ -40,7 +40,7 @@ from vedic_astro.util import rashi_display_name
 
 LIVE_TRANSITS_REFRESH_MS = 30_000
 
-st.set_page_config(page_title="Vedic Horoscope, Transit, & Dasha Calculator", page_icon="🪐", layout="centered")
+st.set_page_config(page_title="Vedic Horoscope, Transit, & Dasha Calculator", page_icon="🪐", layout="centered", initial_sidebar_state="expanded")
 inject_theme()
 
 
@@ -363,40 +363,24 @@ if chart:
     st.divider()
     st.caption(f"{place.address} · {place.timezone} · Ayanamsa: {chart.ayanamsa}")
 
-    tab_natal, tab_navamsa, tab_d10, tab_d4, tab_live, tab_past, tab_sade_sati, tab_guru_gochar, tab_current_dasha, tab_mahadasha = st.tabs(
-        [
-            "Natal Chart",
-            "Navamsa (D9)",
-            "Dasamsa (D10)",
-            "Chaturthamsa (D4)",
-            "Live Transits",
-            "Past Transits",
-            "Sade Sati",
-            "Guru Gochar",
-            "Current Dasha",
-            "Sun & Venus Mahadasha",
-        ]
-    )
-    with tab_natal:
-        _render_natal_chart(chart)
-    with tab_navamsa:
-        _render_navamsa_chart(chart)
-    with tab_d10:
-        _render_divisional_chart(chart, "Dasamsa", compute_dasamsa_chart)
-    with tab_d4:
-        _render_divisional_chart(chart, "Chaturthamsa", compute_chaturthamsa_chart)
-    with tab_live:
-        _render_live_transits(chart)
-    with tab_past:
-        _render_past_transits(chart)
-    with tab_sade_sati:
-        _render_sade_sati(chart)
-    with tab_guru_gochar:
-        _render_guru_gochar(chart)
-    with tab_current_dasha:
-        _render_current_dasha(chart)
-    with tab_mahadasha:
-        _render_mahadasha(chart)
+    views = {
+        "D1 · Natal Chart": lambda: _render_natal_chart(chart),
+        "D4 · Chaturthamsa": lambda: _render_divisional_chart(chart, "Chaturthamsa", compute_chaturthamsa_chart),
+        "D9 · Navamsa": lambda: _render_navamsa_chart(chart),
+        "D10 · Dasamsa": lambda: _render_divisional_chart(chart, "Dasamsa", compute_dasamsa_chart),
+        "Live Transits": lambda: _render_live_transits(chart),
+        "Past Transits": lambda: _render_past_transits(chart),
+        "Sade Sati": lambda: _render_sade_sati(chart),
+        "Guru Gochar": lambda: _render_guru_gochar(chart),
+        "Current Dasha": lambda: _render_current_dasha(chart),
+        "Sun & Venus Mahadasha": lambda: _render_mahadasha(chart),
+    }
+    with st.sidebar:
+        st.subheader("Charts & Calculators")
+        selected_view = st.radio("Choose a view", list(views), key="selected_chart_view", label_visibility="collapsed")
+    st.subheader(selected_view)
+    views[selected_view]()
+
 else:
     st.info("Enter your birth details above and click **Compute chart** to get started.")
 
