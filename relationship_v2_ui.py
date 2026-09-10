@@ -1,9 +1,11 @@
 """Opt-in presentation of frozen v2 outputs; no calculation or scoring rules."""
 from datetime import date, time, timedelta
 import json
+from html import escape
 from zoneinfo import ZoneInfo
 
 import streamlit as st
+from styling import card
 from relationship_ui import instant_inputs, table, MIN_DATE, MAX_DATE, ERRORS
 from vedic_astro.relationship_records import chart_key, local_instant
 from vedic_astro.relationship_v2.engine import analyze_v2
@@ -81,9 +83,12 @@ def category_details(result, category, zone):
 def show_snapshot(result, zone):
     st.caption(f"Evaluated instant: {local(result['at_utc'], zone)} · {result['ayanamsa']}")
     st.write(summary(result))
+    categories = list(LABELS.items())
+    for start in (0, 2):
+        for column, (key, label) in zip(st.columns(2), categories[start:start + 2]):
+            with column:
+                card(escape(label), escape(result['assessments'][key]['state']))
     for key, label in LABELS.items():
-        st.subheader(label)
-        st.write(result['assessments'][key]['state'])
         with st.expander(f'{label} — gate details'):
             category_details(result, key, zone)
     with st.expander('Advanced calculation details'):

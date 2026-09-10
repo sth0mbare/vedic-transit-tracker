@@ -37,8 +37,10 @@ def test_opt_in_snapshot_and_scan(monkeypatch):
     assert not app.exception
     assert calls[0][2] == datetime(2000,1,1,20,tzinfo=timezone.utc)
     assert calls[0][1] == chart()
-    for a in result['assessments'].values():
-        assert any(m.value == a['state'] for m in app.markdown)
+    cards = [m.value for m in app.markdown if 'class="vt-card"' in m.value]
+    assert len(cards) == 4
+    for label, a, rendered in zip(ui.LABELS.values(), result['assessments'].values(), cards):
+        assert label in rendered and a['state'] in rendered
     assert all(not e.proto.expanded for e in app.expander)
     app.run(); assert len(calls) == 1
     app.date_input(key='v2_start').set_value(date(2000,1,1))
