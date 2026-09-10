@@ -4,7 +4,8 @@ from zoneinfo import ZoneInfo
 
 CATEGORY_LABELS = {'meeting/dating': 'Meeting / attraction',
                    'relationship formation': 'Relationship formation',
-                   'commitment/marriage': 'Commitment / marriage'}
+                   'commitment/marriage': 'Commitment / marriage',
+                   'ending/separation': 'Ending / separation'}
 
 
 def activation_level(score):
@@ -30,6 +31,10 @@ def standout_indicators(result):
                 8:'intimacy and shared resources', 11:'social connections'}
     for fact in result['activations']:
         family, source, target = fact['family'], fact['source'], fact['target']
+        if 'ending/separation' in fact.get('categories', ()):
+            if fact.get('counted') and family != 'dasha':
+                candidates.append((False, ('ending', fact['condition_id'], source), fact['detail']))
+            continue
         kind = fact['signature'].split('|', 3)[-1]
         text = None
         key = (source, target, kind)

@@ -12,7 +12,7 @@ from styling import card
 from relationship_presentation import CATEGORY_LABELS, activation_level, result_heading, dasha_chain, standout_indicators
 from vedic_astro.dasha import DAYS_PER_YEAR
 from vedic_astro.timing import birth_cycle, birth_balance, dasha_at, hierarchy_for_md, mahadasha_at
-from vedic_astro.relationships import analyze, analyze_event, indicators, repeated_signatures, scan_windows, RULES
+from vedic_astro.relationships import analyze, analyze_event, indicators, repeated_signatures, scan_windows, RULES, RULE_VERSION
 from vedic_astro.relationship_records import (
     RelationshipEvent, PersonProfile, EVENT_TYPES, OUTCOME_LABELS, chart_key, local_instant, dump_records, load_records)
 from vedic_astro.location import geocode_place, LocationError
@@ -58,6 +58,8 @@ def show_result(result, zone, advanced):
     st.caption('Low: 0–1 counted indicator groups; Moderate: 2–3; High: 4–6. '
                'These describe how many kinds of indicators this rule set recognizes—not likelihood, '
                'compatibility, or relationship length. A low score does not rule out a meaningful event.')
+    st.caption('Ending / separation counts only different families backed by different planets. '
+               'Supporting context adds no points. It can indicate pressure or restructuring, not necessarily a breakup.')
     with st.expander('Why this date stands out', expanded=True):
         st.caption('Counted indicators appear first, followed by supporting context. '
                    'These highlights are not additional points or predictions.')
@@ -74,12 +76,19 @@ def show_result(result, zone, advanced):
         st.markdown('**Sidereal transit snapshot**')
         table([{**r,'sign':rashi_display_name(r['sign'])} for r in result['transits']])
         st.markdown('**Relationship indicator counts**')
-        st.caption('Family counts, independent source matching, and stacking conditions retain their original meanings and values.')
-        table([{'Category':c,'Eligible families (0–6)':v['score'],
+        st.caption('The original categories count eligible families. Ending / separation counts matched family/planet pairs; redundant candidates remain context.')
+        table([{'Category':c,'Score (0–6)':v['score'],
+                'Eligible families':v.get('eligible_family_count',len(v['families'])),
                 'Distinct source matching':v['independent_source_count'],
                 'Stacking conditions met':v['flagged'],'Families':', '.join(v['families'])} for c,v in result['scores'].items()])
         st.markdown('**Activations and the evidence for each one**')
-        table(result['activations'])
+        table([f for f in result['activations'] if 'ending/separation' not in f['categories']])
+        ending=[f for f in result['activations'] if 'ending/separation' in f['categories']]
+        st.markdown('**Ending / separation — counted indicators**')
+        table([f for f in ending if f['counted']])
+        st.markdown('**Ending / separation — supporting context**')
+        table([f for f in ending if not f['counted']])
+        st.json(result['ending_natal'])
         st.markdown('**Degree contacts and whole-sign aspects**')
         st.caption('Degree contacts use the selected orb. Whole-sign aspects are separate and do not imply an exact angle.')
         table(result['contacts'])
@@ -105,6 +114,11 @@ def lookup(chart,zone,orb,advanced):
         except ERRORS as e: st.error(str(e))
     saved=st.session_state.get('relationship_lookup_result')
     if saved and saved[0]==chart_key(chart) and saved[1]==orb:
+        if saved[3]['rules']['version'] != RULE_VERSION:
+            updated=analyze(chart,datetime.fromisoformat(saved[3]['at_utc']),orb)
+            updated.update({k:v for k,v in saved[3].items() if k.startswith('input_')})
+            saved=(saved[0],saved[1],saved[2],updated)
+            st.session_state['relationship_lookup_result']=saved
         show_result(saved[3],saved[2],advanced)
     elif saved:
         st.info('Chart or orb changed. Click Inspect date to recalculate.')
@@ -232,6 +246,9 @@ def future_view(chart,orb):
     saved=st.session_state.get('relationship_scan')
     if not saved or saved[0]!=chart_key(chart) or saved[1]!=orb: return
     result=saved[4]
+    if result['rules']['version'] != RULE_VERSION:
+        st.info('Scoring rules changed. Run the scan again to use ' + RULE_VERSION + '.')
+        return
     st.caption(f'Saved scan: {saved[2]} → {saved[3]} · {result["sample_count"]} daily samples · orb {saved[1]}°')
     st.json({'baseline_start':result['baseline_start'],'baseline_samples':result['baseline_samples'],'thresholds':result['thresholds']})
     table([{'Category':w['category'],'First qualifying sample':w['first_sample'],
@@ -293,6 +310,7 @@ def profiles_view(chart,profiles,orb):
 
 def render_relationships(chart,place):
     st.caption('Relationship Timing & Retrospective · indicators, not promises')
+    st.caption(RULE_VERSION + ' · frozen')
     st.info('Events and profiles are stored only in this browser session. Export a backup before closing or rebooting the app. No account or shared database is used.')
     key='relationship_workspace_'+chart_key(chart)
     workspace=st.session_state.setdefault(key,{'events':[],'profiles':[]})

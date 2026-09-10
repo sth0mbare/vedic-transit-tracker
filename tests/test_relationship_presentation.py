@@ -57,7 +57,7 @@ def test_summary_and_audit_ui_are_separate():
     advanced = next(e for e in app.expander if e.label=='Advanced calculations')
     assert not advanced.proto.expanded
     assert len(advanced.json) >= 4
-    assert any('Eligible families (0–6)' in t.value.columns for t in advanced.dataframe)
+    assert any('Score (0–6)' in t.value.columns for t in advanced.dataframe)
     assert len(advanced.get('download_button')) == 2
     assert any('Meeting / attraction:' in m.value for m in app.markdown)
     assert next(e for e in app.expander if e.label=='Exact dasha dates').dataframe

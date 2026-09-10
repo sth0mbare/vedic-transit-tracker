@@ -1,0 +1,10 @@
+{
+  "version": "Relationship Timing Rules v1.0",
+  "policy": "Frozen before personal historical evaluation. Changes require a new version and review, never historical-outcome tuning.",
+  "files": {
+    "vedic_astro/relationships.py": "c8b8d4c19b3542e3de7330b9f97952165691cb277186c99dccaa09a79cdd18e9",
+    "vedic_astro/relationship_endings.py": "711db058f3f7863f641584bb5f71ea437c7f1e59dbd70d49f09cfe193476090a",
+    "vedic_astro/timing.py": "20f45d4dbdfc3e4224a81c907e33c9e1d66d85983f7ceb7eeded80000fb64806",
+    "relationship_presentation.py": "f085ff7c1afd2e72c0ab1737403ed7230d4491d19f997bd8f7352a5026173961"
+  }
+}

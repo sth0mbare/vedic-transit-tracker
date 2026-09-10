@@ -1,0 +1,451 @@
+[
+  {
+    "ayanamsa": "Lahiri",
+    "at": "1990-05-15T09:00:00+00:00",
+    "scores": {
+      "meeting/dating": {
+        "score": 3,
+        "independent_source_count": 2,
+        "families": [
+          "dasha",
+          "fast",
+          "slow"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Venus"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Jupiter|house5|AD",
+          "fast|Venus|Venus|conjunction:Venus",
+          "slow|Jupiter|house5|conjunction:Jupiter"
+        ]
+      },
+      "relationship formation": {
+        "score": 4,
+        "independent_source_count": 4,
+        "families": [
+          "dasha",
+          "fast",
+          "slow",
+          "ul_dk"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn",
+          "Sun",
+          "Venus"
+        ],
+        "flagged": true,
+        "signatures": [
+          "dasha|Jupiter|Jupiter|AD",
+          "dasha|Jupiter|house5|AD",
+          "fast|Venus|Venus|conjunction:Venus",
+          "slow|Jupiter|Jupiter|conjunction:Jupiter",
+          "slow|Jupiter|house5|conjunction:Jupiter",
+          "slow|Saturn|house7|conjunction:Saturn",
+          "ul_dk|Sun|Darakaraka|conjunction:Sun"
+        ]
+      },
+      "commitment/marriage": {
+        "score": 3,
+        "independent_source_count": 3,
+        "families": [
+          "dasha",
+          "slow",
+          "ul_dk"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn",
+          "Sun"
+        ],
+        "flagged": true,
+        "signatures": [
+          "dasha|Jupiter|Jupiter|AD",
+          "slow|Jupiter|Jupiter|conjunction:Jupiter",
+          "slow|Saturn|house7|conjunction:Saturn",
+          "ul_dk|Sun|Darakaraka|conjunction:Sun"
+        ]
+      }
+    },
+    "activations_sha256": "18574f57d3d2373eeee543ce649d5f9b59c7c94e27b96f825a3eb231c26c4803"
+  },
+  {
+    "ayanamsa": "Lahiri",
+    "at": "2007-02-04T12:00:00+00:00",
+    "scores": {
+      "meeting/dating": {
+        "score": 0,
+        "independent_source_count": 0,
+        "families": [],
+        "source_planets": [],
+        "flagged": false,
+        "signatures": []
+      },
+      "relationship formation": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "dasha"
+        ],
+        "source_planets": [
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Saturn|house7|AD"
+        ]
+      },
+      "commitment/marriage": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "dasha"
+        ],
+        "source_planets": [
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Saturn|house7|AD"
+        ]
+      }
+    },
+    "activations_sha256": "c4f31ad043d5ba4cd2fdc331a17113eccbd2002b0550ff2af291dbb753f56bd2"
+  },
+  {
+    "ayanamsa": "Lahiri",
+    "at": "2018-11-06T03:00:00+00:00",
+    "scores": {
+      "meeting/dating": {
+        "score": 2,
+        "independent_source_count": 2,
+        "families": [
+          "dasha",
+          "house"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Jupiter|house5|PD",
+          "house|Saturn|house5|occupancy"
+        ]
+      },
+      "relationship formation": {
+        "score": 3,
+        "independent_source_count": 2,
+        "families": [
+          "d9",
+          "dasha",
+          "house"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "d9|Jupiter|7th lord|projected-sign",
+          "dasha|Jupiter|Jupiter|PD",
+          "dasha|Jupiter|house5|PD",
+          "dasha|Saturn|house7|AD",
+          "house|Saturn|house5|occupancy"
+        ]
+      },
+      "commitment/marriage": {
+        "score": 2,
+        "independent_source_count": 2,
+        "families": [
+          "d9",
+          "dasha"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "d9|Jupiter|7th lord|projected-sign",
+          "dasha|Jupiter|Jupiter|PD",
+          "dasha|Saturn|house7|AD"
+        ]
+      }
+    },
+    "activations_sha256": "115a179031031063ddd7f9556605296c3cb2478ebf40686cad4fa73d3a44f657"
+  },
+  {
+    "ayanamsa": "Lahiri",
+    "at": "2026-07-01T00:00:00+00:00",
+    "scores": {
+      "meeting/dating": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "slow"
+        ],
+        "source_planets": [
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "slow|Saturn|Venus|conjunction:Venus"
+        ]
+      },
+      "relationship formation": {
+        "score": 2,
+        "independent_source_count": 2,
+        "families": [
+          "d9",
+          "slow"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "d9|Jupiter|7th lord|projected-sign",
+          "slow|Saturn|Venus|conjunction:Venus"
+        ]
+      },
+      "commitment/marriage": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "d9"
+        ],
+        "source_planets": [
+          "Jupiter"
+        ],
+        "flagged": false,
+        "signatures": [
+          "d9|Jupiter|7th lord|projected-sign"
+        ]
+      }
+    },
+    "activations_sha256": "1a153a55dba98e4b2e7cd1b6c19e855248dd1b117385e416bef8aa7ec337eab4"
+  },
+  {
+    "ayanamsa": "Raman",
+    "at": "1990-05-15T09:00:00+00:00",
+    "scores": {
+      "meeting/dating": {
+        "score": 3,
+        "independent_source_count": 2,
+        "families": [
+          "dasha",
+          "fast",
+          "slow"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Venus"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Jupiter|house5|AD",
+          "fast|Venus|Venus|conjunction:Venus",
+          "slow|Jupiter|house5|conjunction:Jupiter"
+        ]
+      },
+      "relationship formation": {
+        "score": 4,
+        "independent_source_count": 4,
+        "families": [
+          "dasha",
+          "fast",
+          "slow",
+          "ul_dk"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn",
+          "Sun",
+          "Venus"
+        ],
+        "flagged": true,
+        "signatures": [
+          "dasha|Jupiter|Jupiter|AD",
+          "dasha|Jupiter|house5|AD",
+          "fast|Venus|Venus|conjunction:Venus",
+          "slow|Jupiter|Jupiter|conjunction:Jupiter",
+          "slow|Jupiter|house5|conjunction:Jupiter",
+          "slow|Saturn|house7|conjunction:Saturn",
+          "ul_dk|Sun|Darakaraka|conjunction:Sun"
+        ]
+      },
+      "commitment/marriage": {
+        "score": 3,
+        "independent_source_count": 3,
+        "families": [
+          "dasha",
+          "slow",
+          "ul_dk"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn",
+          "Sun"
+        ],
+        "flagged": true,
+        "signatures": [
+          "dasha|Jupiter|Jupiter|AD",
+          "slow|Jupiter|Jupiter|conjunction:Jupiter",
+          "slow|Saturn|house7|conjunction:Saturn",
+          "ul_dk|Sun|Darakaraka|conjunction:Sun"
+        ]
+      }
+    },
+    "activations_sha256": "79eac18b20e020658c52611168334ce591a01f15d1a208edd41d4a5edf81d854"
+  },
+  {
+    "ayanamsa": "Raman",
+    "at": "2007-02-04T12:00:00+00:00",
+    "scores": {
+      "meeting/dating": {
+        "score": 0,
+        "independent_source_count": 0,
+        "families": [],
+        "source_planets": [],
+        "flagged": false,
+        "signatures": []
+      },
+      "relationship formation": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "dasha"
+        ],
+        "source_planets": [
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Saturn|house7|AD"
+        ]
+      },
+      "commitment/marriage": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "dasha"
+        ],
+        "source_planets": [
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Saturn|house7|AD"
+        ]
+      }
+    },
+    "activations_sha256": "8c05848620e028924c2b04b733689a613b1698a0defb3e4bae37b08576d85ce7"
+  },
+  {
+    "ayanamsa": "Raman",
+    "at": "2018-11-06T03:00:00+00:00",
+    "scores": {
+      "meeting/dating": {
+        "score": 2,
+        "independent_source_count": 2,
+        "families": [
+          "dasha",
+          "house"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Jupiter|house5|PD",
+          "house|Saturn|house5|occupancy"
+        ]
+      },
+      "relationship formation": {
+        "score": 2,
+        "independent_source_count": 2,
+        "families": [
+          "dasha",
+          "house"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Jupiter|Jupiter|PD",
+          "dasha|Jupiter|house5|PD",
+          "dasha|Saturn|house7|AD",
+          "house|Saturn|house5|occupancy"
+        ]
+      },
+      "commitment/marriage": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "dasha"
+        ],
+        "source_planets": [
+          "Jupiter",
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "dasha|Jupiter|Jupiter|PD",
+          "dasha|Saturn|house7|AD"
+        ]
+      }
+    },
+    "activations_sha256": "f86dae17e56a1ad1bf2328e8628afc0100f69f7eca524c208fad0bc7c5d22d41"
+  },
+  {
+    "ayanamsa": "Raman",
+    "at": "2026-07-01T00:00:00+00:00",
+    "scores": {
+      "meeting/dating": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "slow"
+        ],
+        "source_planets": [
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "slow|Saturn|Venus|conjunction:Venus"
+        ]
+      },
+      "relationship formation": {
+        "score": 1,
+        "independent_source_count": 1,
+        "families": [
+          "slow"
+        ],
+        "source_planets": [
+          "Saturn"
+        ],
+        "flagged": false,
+        "signatures": [
+          "slow|Saturn|Venus|conjunction:Venus"
+        ]
+      },
+      "commitment/marriage": {
+        "score": 0,
+        "independent_source_count": 0,
+        "families": [],
+        "source_planets": [],
+        "flagged": false,
+        "signatures": []
+      }
+    },
+    "activations_sha256": "9535b501a9226acafcae6f7925b97bcdbc05d1c23b8f23d0c2022ce576506ce4"
+  }
+]

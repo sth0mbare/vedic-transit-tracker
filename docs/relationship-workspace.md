@@ -62,7 +62,7 @@ A stacking flag requires at least three eligible families, a dasha family and a 
 
 ### Event summaries and optional comparison labels
 
-The event/date snapshot defaults to a local-date heading, three activation labels,
+The event/date snapshot defaults to a local-date heading, four activation labels,
 a maximum of six explanations drawn from existing evidence, and the MD → AD → PD
 chain. Exact period dates expand on click. Counted evidence is listed before
 supporting context; repeated descriptions of the same contact are deduplicated.
@@ -84,3 +84,14 @@ The comparison table includes the label alongside unchanged scores, so transient
 and lasting experiences can be compared without fitting the rules to outcomes.
 Version-1 backups remain readable; older events default to unclassified. New
 backups preserve the optional label. No known real-life event is hardcoded.
+
+
+## Frozen v1.0 extension
+
+[Relationship Timing Rules v1.0](relationship-rules-v1.0.md) adds Ending / separation,
+with independent family/source counting and explicitly separated counted/context
+records. The original three categories above are unchanged. All four categories
+use the existing numeric display bands; ending uses matched independent points.
+The version travels with calculation records and scans and is visible in the UI.
+Saved events are recalculated when opened or compared; stale cached snapshots
+are recalculated and old future scans require a new scan.

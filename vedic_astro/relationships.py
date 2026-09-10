@@ -5,6 +5,7 @@ from collections import defaultdict
 from statistics import median
 from math import ceil
 
+from .relationship_endings import ending_activations, RULE_SPEC as ENDING_RULES
 from .constants import RASHIS
 from .ephemeris import get_planet_positions
 from .navamsa import compute_navamsa_chart, _navamsa_sign_index
@@ -17,9 +18,10 @@ REL_HOUSES = (1,5,7,8,11)
 CLASSICAL = ('Sun','Moon','Mars','Mercury','Jupiter','Venus','Saturn')
 ASPECTS = {p: (7,) for p in CLASSICAL}
 ASPECTS.update(Mars=(4,7,8), Jupiter=(5,7,9), Saturn=(3,7,10))
-RULE_VERSION = 'relationship-v1'
+RULE_VERSION = 'Relationship Timing Rules v1.0'
 RULES = {
     'version': RULE_VERSION,
+    'ending_separation': ENDING_RULES,
     'houses': 'Whole-sign houses; classical sign lords (Mars for Scorpio, Saturn for Aquarius).',
     'darakaraka': 'Lowest unrounded degree within sign among Sun through Saturn; nodes excluded. Exact ties reported together.',
     'upapada': 'Arudha of D1 house 12: repeat sign distance to its lord. If result is 1st/7th from house 12, move 10th from that result.',
@@ -192,10 +194,15 @@ def analyze(chart, at, orb=3.0):
             if sign==target_sign:
                 add('d9',p,t,'projected-sign',f"Transit D1 {lon:.9f}° projects to D9 {sign}, sharing natal D9 {t}'s sign", p in ('Jupiter','Saturn') and t in ('house7','7th lord'))
     facts=list(facts.values())
+    scores = score_activations(facts)
+    ending_score, ending_evidence, ending_natal = ending_activations(
+        chart, meta, periods, transit_rows, contacts, SIGN_LORDS, ASPECTS)
+    scores['ending/separation'] = ending_score
     return {'at_utc':at.isoformat(),'ayanamsa':chart.ayanamsa,'rules':RULES,'orb':orb,
             'natal':meta,'natal_d1':asdict(chart),'birth_dasha_balance':birth_balance(chart.planets['Moon'].longitude),'dashas':[asdict(p) for p in periods],
             'transits':transit_rows,'contacts':contacts,
-            'activations':[asdict(f) for f in facts],'scores':score_activations(facts)}
+            'activations':[asdict(f) for f in facts] + ending_evidence,'scores':scores,
+            'ending_natal':ending_natal}
 
 
 def repeated_signatures(event_results):
