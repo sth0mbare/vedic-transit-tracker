@@ -10,8 +10,8 @@ from datetime import date, datetime, time, timezone
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from streamlit_autorefresh import st_autorefresh
 
+from transits_ui import render_transits
 from common import birth_details_form, get_chart
 from styling import GRAHA_COLORS, badge, card, inject_theme
 from vedic_astro.constants import SUN, VENUS
@@ -21,24 +21,19 @@ from vedic_astro.dasha import (
     full_mahadasha_sequence,
     mahadasha_periods_for_lords,
 )
-from vedic_astro.horoscope import compute_weekly_horoscope
 from vedic_astro.divisional import compute_chaturthamsa_chart, compute_dasamsa_chart, compute_hora_chart
 from vedic_astro.navamsa import compute_navamsa_chart
 from vedic_astro.transits import (
-    COMBUST_OVERVIEW_BLURB,
     GURU_GOCHAR_OVERVIEW_BLURB,
-    HOUSE_SIGNIFICATIONS_FROM_MOON,
     JUPITER_COMBUSTION_ORB_DEGREES,
     RETROGRADE_OVERVIEW_BLURB,
     SADE_SATI_OVERVIEW_BLURB,
     SADE_SATI_PHASE_BLURBS,
     compute_guru_gochar,
     compute_sade_sati,
-    compute_transits,
 )
 from vedic_astro.util import rashi_display_name
 
-LIVE_TRANSITS_REFRESH_MS = 30_000
 
 st.set_page_config(page_title="Vedic Horoscope, Transit, & Dasha Calculator", page_icon="🪐", layout="centered", initial_sidebar_state="expanded")
 inject_theme()
@@ -119,96 +114,6 @@ def _render_divisional_chart(chart, name, compute) -> None:
         f"{label} houses are counted from the {name} Lagna. Retrograde status comes "
         f"from the natal planetary calculation; it is not calculated independently for {label}."
     )
-
-
-def _transit_rows(transits) -> list[dict]:
-    return [
-        {
-            "Graha": name,
-            "Rashi": rashi_display_name(t.rashi),
-            "House (Moon)": t.house_from_moon,
-            "House (Lagna)": t.house_from_lagna,
-            "Retro": "Yes" if t.retrograde else "",
-            "Sep. from Sun": (
-                f"{t.separation_from_sun_degrees:.1f}°" if t.separation_from_sun_degrees is not None else "—"
-            ),
-            "Combust": "Yes" if t.combust else ("—" if t.combust is None else ""),
-            "Next Change": t.next_sign_change.date().isoformat() if t.next_sign_change else "—",
-        }
-        for name, t in transits.items()
-    ]
-
-
-def _render_live_transits(chart) -> None:
-    st_autorefresh(interval=LIVE_TRANSITS_REFRESH_MS, key="live_transits_autorefresh")
-
-    now = datetime.now(timezone.utc)
-    st.caption(f"Live · last updated {now.strftime('%H:%M:%S')} UTC · refreshes every 30s")
-
-    transits = compute_transits(chart, at_dt=now, ayanamsa_name=chart.ayanamsa)
-    st.dataframe(pd.DataFrame(_transit_rows(transits)), hide_index=True, use_container_width=True)
-
-    retrograde_names = [name for name, t in transits.items() if t.retrograde]
-    if retrograde_names:
-        st.warning(f"Currently retrograde: {', '.join(retrograde_names)}")
-        st.caption(RETROGRADE_OVERVIEW_BLURB)
-
-    combust_names = [name for name, t in transits.items() if t.combust]
-    if combust_names:
-        st.warning(f"Currently combust: {', '.join(combust_names)}")
-        st.caption(COMBUST_OVERVIEW_BLURB)
-
-    st.divider()
-    st.subheader("Notable Weekly Transits")
-    horoscope = compute_weekly_horoscope(chart, transits, start_dt=now, ayanamsa_name=chart.ayanamsa)
-    st.caption(f"{horoscope.start} to {horoscope.end}")
-
-    moon_text = " → ".join(rashi_display_name(m.rashi) for m in horoscope.moon_journey)
-    card("Moon's Journey This Week", moon_text)
-
-    # Only Sun and Moon for now; other grahas can be added once we decide
-    # what's worth surfacing at a weekly cadence.
-    sun_change = horoscope.upcoming_sign_changes.get("Sun")
-    if sun_change:
-        st.markdown("**Other notable transits this week:**")
-        st.markdown(f"- **Sun** moves into a new sign around {sun_change.next_sign_change.date()}")
-
-    with st.expander("What do these houses mean?"):
-        st.caption("Houses are counted from your natal Moon -- the traditional Vedic reference point for gochara.")
-        for house_num, signification in HOUSE_SIGNIFICATIONS_FROM_MOON.items():
-            st.markdown(f"**House {house_num}** — {signification}")
-
-
-def _render_past_transits(chart) -> None:
-    st.caption("Look up where the grahas were, relative to your natal chart, on any date in the past.")
-
-    today = datetime.now(timezone.utc).date()
-    col1, col2 = st.columns(2)
-    with col1:
-        query_date = st.date_input(
-            "Date", value=today, min_value=date(1900, 1, 1), max_value=today, key="past_transits_date"
-        )
-    with col2:
-        query_time = st.time_input("Time (UTC)", value=time(12, 0), key="past_transits_time")
-
-    at_dt = datetime.combine(query_date, query_time, tzinfo=timezone.utc)
-    if at_dt > datetime.now(timezone.utc):
-        st.error("Please pick a date/time in the past.")
-        return
-
-    transits = compute_transits(chart, at_dt=at_dt, ayanamsa_name=chart.ayanamsa)
-    st.caption(f"Transits as of {at_dt.strftime('%Y-%m-%d %H:%M')} UTC")
-    st.dataframe(pd.DataFrame(_transit_rows(transits)), hide_index=True, use_container_width=True)
-
-    retrograde_names = [name for name, t in transits.items() if t.retrograde]
-    if retrograde_names:
-        st.warning(f"Retrograde on this date: {', '.join(retrograde_names)}")
-        st.caption(RETROGRADE_OVERVIEW_BLURB)
-
-    combust_names = [name for name, t in transits.items() if t.combust]
-    if combust_names:
-        st.warning(f"Combust on this date: {', '.join(combust_names)}")
-        st.caption(COMBUST_OVERVIEW_BLURB)
 
 
 def _render_sade_sati(chart) -> None:
@@ -375,8 +280,7 @@ if chart:
         "D4 · Chaturthamsa": lambda: _render_divisional_chart(chart, "Chaturthamsa", compute_chaturthamsa_chart),
         "D9 · Navamsa": lambda: _render_navamsa_chart(chart),
         "D10 · Dasamsa": lambda: _render_divisional_chart(chart, "Dasamsa", compute_dasamsa_chart),
-        "Live Transits": lambda: _render_live_transits(chart),
-        "Past Transits": lambda: _render_past_transits(chart),
+        "Transits": lambda: render_transits(chart),
         "Sade Sati": lambda: _render_sade_sati(chart),
         "Guru Gochar": lambda: _render_guru_gochar(chart),
         "Current Dasha": lambda: _render_current_dasha(chart),

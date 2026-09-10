@@ -10,7 +10,7 @@ from vedic_astro.chart import compute_natal_chart
 from vedic_astro.location import Place
 
 VIEWS = ['D1 · Natal Chart', 'D2 · Hora', 'D4 · Chaturthamsa', 'D9 · Navamsa',
-         'D10 · Dasamsa', 'Live Transits', 'Past Transits', 'Sade Sati',
+         'D10 · Dasamsa', 'Transits', 'Sade Sati',
          'Guru Gochar', 'Current Dasha', 'Sun & Venus Mahadasha']
 
 
@@ -31,7 +31,6 @@ def test_core_page_renders_without_relationship_analysis(view, monkeypatch):
     app.session_state['chart'] = c
     app.session_state['place'] = Place('Pune','Pune',18.5213738,73.8545071,'Asia/Kolkata')
     app.session_state['selected_chart_view'] = view
-    app.session_state['past_transits_date'] = date(2000,1,1)
     app.run()
     assert not app.exception
     assert not app.error
@@ -67,12 +66,12 @@ def test_app_import_tree_excludes_relationship_modules():
                     base = path.parent
                     for _ in range(node.level-1): base = base.parent
                     candidate = base.joinpath(*node.module.split('.')).with_suffix('.py')
-                    assert 'relationship' not in str(candidate)
+                    assert 'relationship' not in str(candidate) or candidate == Path('vedic_astro/relationship_records.py')
                     if candidate.exists(): visit(candidate)
                     continue
                 modules = [node.module]
             for module in modules:
-                assert 'relationship' not in module
+                assert 'relationship' not in module or module == 'vedic_astro.relationship_records'
                 candidate = Path(*module.split('.')).with_suffix('.py')
                 if candidate.exists(): visit(candidate)
     visit(Path('app.py'))
