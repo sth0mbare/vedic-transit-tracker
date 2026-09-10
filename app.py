@@ -22,6 +22,7 @@ from vedic_astro.dasha import (
     mahadasha_periods_for_lords,
 )
 from vedic_astro.horoscope import compute_weekly_horoscope
+from vedic_astro.divisional import compute_chaturthamsa_chart, compute_dasamsa_chart
 from vedic_astro.navamsa import compute_navamsa_chart
 from vedic_astro.transits import (
     COMBUST_OVERVIEW_BLURB,
@@ -94,6 +95,23 @@ def _render_navamsa_chart(chart) -> None:
     st.caption(
         "D9 houses are counted from the Navamsa Lagna. Retrograde status comes "
         "from the natal planetary calculation; it is not calculated independently for D9."
+    )
+
+
+def _render_divisional_chart(chart, name, compute) -> None:
+    result = compute(chart)
+    label = f"D{result.division}"
+    card(f"{name} Lagna ({label} Ascendant)", rashi_display_name(result.ascendant_rashi))
+    st.caption(f"Derived from your natal sidereal positions · Ayanamsa: {result.ayanamsa}")
+    st.dataframe(pd.DataFrame([
+        {"Graha": p.name, f"{label} Rashi": rashi_display_name(p.rashi),
+         f"{label} House": p.house,
+         "Retrograde (natal)": "Yes" if p.natal_retrograde else "No"}
+        for p in result.planets.values()
+    ]), hide_index=True, use_container_width=True)
+    st.caption(
+        f"{label} houses are counted from the {name} Lagna. Retrograde status comes "
+        f"from the natal planetary calculation; it is not calculated independently for {label}."
     )
 
 
@@ -345,10 +363,12 @@ if chart:
     st.divider()
     st.caption(f"{place.address} · {place.timezone} · Ayanamsa: {chart.ayanamsa}")
 
-    tab_natal, tab_navamsa, tab_live, tab_past, tab_sade_sati, tab_guru_gochar, tab_current_dasha, tab_mahadasha = st.tabs(
+    tab_natal, tab_navamsa, tab_d10, tab_d4, tab_live, tab_past, tab_sade_sati, tab_guru_gochar, tab_current_dasha, tab_mahadasha = st.tabs(
         [
             "Natal Chart",
             "Navamsa (D9)",
+            "Dasamsa (D10)",
+            "Chaturthamsa (D4)",
             "Live Transits",
             "Past Transits",
             "Sade Sati",
@@ -361,6 +381,10 @@ if chart:
         _render_natal_chart(chart)
     with tab_navamsa:
         _render_navamsa_chart(chart)
+    with tab_d10:
+        _render_divisional_chart(chart, "Dasamsa", compute_dasamsa_chart)
+    with tab_d4:
+        _render_divisional_chart(chart, "Chaturthamsa", compute_chaturthamsa_chart)
     with tab_live:
         _render_live_transits(chart)
     with tab_past:
