@@ -1,4 +1,4 @@
-"""Parashari D4 and D10 projections of stored sidereal natal positions.
+"""Parashari D2, D4 and D10 projections of stored sidereal natal positions.
 
 Rules: P.V.R. Narasimha Rao, Vedic Astrology: An Integrated Approach,
 chapter 6 (https://www.vedicastrologer.org/articles/vedic_astro_textbook.pdf).
@@ -10,7 +10,7 @@ from math import isfinite
 from .chart import NatalChart
 from .constants import GRAHAS, RASHIS
 
-_BOUNDARIES = {d: tuple(i * (30 / d) for i in range(1, 12 * d)) for d in (4, 10)}
+_BOUNDARIES = {d: tuple(i * (30 / d) for i in range(1, 12 * d)) for d in (2, 4, 10)}
 
 
 @dataclass(frozen=True)
@@ -35,6 +35,8 @@ def _sign(longitude: float, division: int) -> int:
     # Direct comparisons preserve immediately adjacent floating-point values.
     segment = bisect_right(_BOUNDARIES[division], longitude % 360)
     sign, part = divmod(segment, division)
+    if division == 2:
+        return 4 if (sign % 2 == part) else 3  # Sun: Leo; Moon: Cancer
     if division == 4:
         return (sign + 3 * part) % 12
     # Odd-numbered zodiac signs have even zero-based indices.
@@ -60,3 +62,8 @@ def compute_chaturthamsa_chart(natal_chart: NatalChart) -> DivisionalChart:
 def compute_dasamsa_chart(natal_chart: NatalChart) -> DivisionalChart:
     """D10: ten 3° parts, starting from self (odd signs) or ninth (even)."""
     return _compute(natal_chart, 10)
+
+
+def compute_hora_chart(natal_chart: NatalChart) -> DivisionalChart:
+    """Sun–Moon Hora: odd signs Leo/Cancer; even signs Cancer/Leo, 15° each."""
+    return _compute(natal_chart, 2)

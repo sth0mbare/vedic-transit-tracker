@@ -22,7 +22,7 @@ from vedic_astro.dasha import (
     mahadasha_periods_for_lords,
 )
 from vedic_astro.horoscope import compute_weekly_horoscope
-from vedic_astro.divisional import compute_chaturthamsa_chart, compute_dasamsa_chart
+from vedic_astro.divisional import compute_chaturthamsa_chart, compute_dasamsa_chart, compute_hora_chart
 from vedic_astro.navamsa import compute_navamsa_chart
 from vedic_astro.transits import (
     COMBUST_OVERVIEW_BLURB,
@@ -101,6 +101,12 @@ def _render_navamsa_chart(chart) -> None:
 def _render_divisional_chart(chart, name, compute) -> None:
     result = compute(chart)
     label = f"D{result.division}"
+    if result.division == 2:
+        st.caption(
+            "Sun–Moon Hora method: each natal sign is split into two 15° halves. "
+            "Odd signs map to Leo then Cancer; even signs to Cancer then Leo. "
+            "All placements fall in these two signs in this method. Other Hora methods can differ."
+        )
     card(f"{name} Lagna ({label} Ascendant)", rashi_display_name(result.ascendant_rashi))
     st.caption(f"Derived from your natal sidereal positions · Ayanamsa: {result.ayanamsa}")
     st.dataframe(pd.DataFrame([
@@ -365,6 +371,7 @@ if chart:
 
     views = {
         "D1 · Natal Chart": lambda: _render_natal_chart(chart),
+        "D2 · Hora": lambda: _render_divisional_chart(chart, "Hora", compute_hora_chart),
         "D4 · Chaturthamsa": lambda: _render_divisional_chart(chart, "Chaturthamsa", compute_chaturthamsa_chart),
         "D9 · Navamsa": lambda: _render_navamsa_chart(chart),
         "D10 · Dasamsa": lambda: _render_divisional_chart(chart, "Dasamsa", compute_dasamsa_chart),
