@@ -5,6 +5,9 @@ calculator logic -- this only ever emits markup/CSS, never computes
 anything astrological.
 """
 
+from base64 import b64encode
+from pathlib import Path
+
 import streamlit as st
 
 # Traditional planet/gemstone colors, used for the dasha timeline chart.
@@ -106,7 +109,11 @@ hr {
 
 /* Phthalo green sidebar with ivory labels and a soft mint selection. */
 [data-testid="stSidebar"] {
-    background: linear-gradient(165deg, #164D40 0%, #123524 100%);
+    background-color: #032B25;
+    background-image: linear-gradient(rgba(0, 20, 17, 0.18), rgba(0, 20, 17, 0.18)), url("__SIDEBAR_TEXTURE__");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: #F2F7EF;
     border-right: 1px solid rgba(194, 224, 203, 0.22);
 }
@@ -116,7 +123,8 @@ hr {
     color: #F2F7EF !important;
 }
 [data-testid="stSidebar"] [data-testid="stButton"] button {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(2, 31, 26, 0.62);
+    backdrop-filter: blur(5px);
     color: #F2F7EF;
     border: 1px solid rgba(194, 224, 203, 0.25);
     border-radius: 12px;
@@ -204,7 +212,9 @@ hr {
 
 
 def inject_theme() -> None:
-    st.markdown(_CSS, unsafe_allow_html=True)
+    texture = Path(__file__).parent / "assets" / "sidebar-green-marble.png"
+    image_uri = "data:image/png;base64," + b64encode(texture.read_bytes()).decode("ascii")
+    st.markdown(_CSS.replace("__SIDEBAR_TEXTURE__", image_uri), unsafe_allow_html=True)
 
 
 def badge(text: str, kind: str = "neutral") -> str:
