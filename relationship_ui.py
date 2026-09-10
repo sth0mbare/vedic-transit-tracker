@@ -9,11 +9,12 @@ import pandas as pd
 import streamlit as st
 
 from styling import card
+from relationship_presentation import CATEGORY_LABELS, activation_level, result_heading, dasha_chain, standout_indicators
 from vedic_astro.dasha import DAYS_PER_YEAR
 from vedic_astro.timing import birth_cycle, birth_balance, dasha_at, hierarchy_for_md, mahadasha_at
 from vedic_astro.relationships import analyze, analyze_event, indicators, repeated_signatures, scan_windows, RULES
 from vedic_astro.relationship_records import (
-    RelationshipEvent, PersonProfile, EVENT_TYPES, chart_key, local_instant, dump_records, load_records)
+    RelationshipEvent, PersonProfile, EVENT_TYPES, OUTCOME_LABELS, chart_key, local_instant, dump_records, load_records)
 from vedic_astro.location import geocode_place, LocationError
 from vedic_astro.synastry import compare_profiles
 from vedic_astro.util import rashi_display_name
@@ -47,34 +48,51 @@ def period_rows(rows, zone):
              'Parent MD':r['parent_md'],'Parent AD':r['parent_ad']} for r in rows]
 
 
-def show_result(result, zone):
-    st.caption(f"Moment: {datetime.fromisoformat(result['at_utc']).astimezone(ZoneInfo(zone)).isoformat()} · UTC: {result['at_utc']} · {result['ayanamsa']}")
-    st.markdown('**Active MD / AD / PD**')
-    table(period_rows(result['dashas'],zone))
+def show_result(result, zone, advanced):
+    st.subheader(result_heading(result, zone))
+    if result.get('event'):
+        st.caption(result['event']['person'])
+    st.markdown('**Relationship activation summary**')
+    for c, value in result['scores'].items():
+        st.markdown(f"**{CATEGORY_LABELS.get(c, c.capitalize())}: {activation_level(value['score'])}**")
+    st.caption('Low: 0–1 counted indicator groups; Moderate: 2–3; High: 4–6. '
+               'These describe how many kinds of indicators this rule set recognizes—not likelihood, '
+               'compatibility, or relationship length. A low score does not rule out a meaningful event.')
+    with st.expander('Why this date stands out', expanded=True):
+        st.caption('Counted indicators appear first, followed by supporting context. '
+                   'These highlights are not additional points or predictions.')
+        for explanation in standout_indicators(result):
+            st.markdown('- ' + explanation)
+    st.markdown('**Active dasha**')
+    st.write(dasha_chain(result) or 'Unavailable before birth')
+    with st.expander('Exact dasha dates'):
+        table(period_rows(result['dashas'],zone))
     if not result['dashas']:
         st.info('This date precedes birth. Transits are shown, but personal dashas are unavailable.')
-    st.markdown('**Sidereal transit snapshot**')
-    table([{**r,'sign':rashi_display_name(r['sign'])} for r in result['transits']])
-    st.markdown('**Relationship indicator counts**')
-    st.caption('Counts describe this rule set—not compatibility, probability, or a promise of a relationship.')
-    table([{'Category':c,'Eligible families (0–6)':v['score'],
-            'Distinct source matching':v['independent_source_count'],
-            'Stacking conditions met':v['flagged'],'Families':', '.join(v['families'])} for c,v in result['scores'].items()])
-    with st.expander('Activations and the evidence for each one'):
+    with advanced:
+        st.caption(f"Moment: {datetime.fromisoformat(result['at_utc']).astimezone(ZoneInfo(zone)).isoformat()} · UTC: {result['at_utc']} · {result['ayanamsa']}")
+        st.markdown('**Sidereal transit snapshot**')
+        table([{**r,'sign':rashi_display_name(r['sign'])} for r in result['transits']])
+        st.markdown('**Relationship indicator counts**')
+        st.caption('Family counts, independent source matching, and stacking conditions retain their original meanings and values.')
+        table([{'Category':c,'Eligible families (0–6)':v['score'],
+                'Distinct source matching':v['independent_source_count'],
+                'Stacking conditions met':v['flagged'],'Families':', '.join(v['families'])} for c,v in result['scores'].items()])
+        st.markdown('**Activations and the evidence for each one**')
         table(result['activations'])
-    with st.expander('Degree contacts and whole-sign aspects'):
+        st.markdown('**Degree contacts and whole-sign aspects**')
         st.caption('Degree contacts use the selected orb. Whole-sign aspects are separate and do not imply an exact angle.')
         table(result['contacts'])
-    with st.expander('Natal D1 / D9, Darakaraka and Upapada calculation details'):
+        st.markdown('**Natal D1 / D9, Darakaraka and Upapada calculation details**')
         st.json(result['natal'])
         st.json(result['natal_d1'])
-    with st.expander('Full calculation record / rules'):
+        st.markdown('**Full calculation record / rules**')
         st.json(result)
-    st.download_button('Download calculation record',json.dumps(result,default=str,indent=2),
-                       'relationship-calculation.json','application/json',key='record_'+result['at_utc'])
+        st.download_button('Download calculation record',json.dumps(result,default=str,indent=2),
+                           'relationship-calculation.json','application/json',key='record_'+result['at_utc'])
 
 
-def lookup(chart,zone,orb):
+def lookup(chart,zone,orb,advanced):
     with st.form('relationship_lookup'):
         day,clock,tz,fold=instant_inputs('lookup',zone)
         run=st.form_submit_button('Inspect date')
@@ -87,7 +105,7 @@ def lookup(chart,zone,orb):
         except ERRORS as e: st.error(str(e))
     saved=st.session_state.get('relationship_lookup_result')
     if saved and saved[0]==chart_key(chart) and saved[1]==orb:
-        show_result(saved[3],saved[2])
+        show_result(saved[3],saved[2],advanced)
     elif saved:
         st.info('Chart or orb changed. Click Inspect date to recalculate.')
 
@@ -133,6 +151,9 @@ def event_editor(events,zone):
         tz=st.text_input('Event timezone',value=current.timezone if current else zone)
         fold=st.selectbox('Repeated clock time',('Require clarification','First occurrence','Second occurrence'),
                           index=(current.fold+1) if current and current.fold is not None else 0)
+        outcome=st.selectbox('Outcome / comparison group (optional)',OUTCOME_LABELS,
+            index=OUTCOME_LABELS.index(current.outcome_label) if current else 0,
+            help='For comparing experiences only. This label never changes calculations or scores.')
         notes=st.text_area('Notes (optional)',value=current.notes if current else '',max_chars=10000)
         save=st.form_submit_button('Save event')
     if save:
@@ -140,7 +161,7 @@ def event_editor(events,zone):
             if not person.strip(): raise ValueError('Enter a person or label.')
             if event_type=='custom' and not custom.strip(): raise ValueError('Enter a custom event type.')
             event=RelationshipEvent(existing if current else str(uuid4()),person.strip(),event_type,day.isoformat(),
-                clock.isoformat() if known else None,tz,notes,custom,None if fold=='Require clarification' else 0 if fold=='First occurrence' else 1)
+                clock.isoformat() if known else None,tz,notes,custom,None if fold=='Require clarification' else 0 if fold=='First occurrence' else 1, outcome_label=outcome)
             event.instant()
             if current: events[events.index(current)]=event
             else: events.append(event)
@@ -152,8 +173,9 @@ def event_editor(events,zone):
         st.rerun()
 
 
-def events_view(chart,zone,orb,events):
-    event_editor(events,zone)
+def events_view(chart,zone,orb,events,advanced):
+    with st.expander('Add or edit events', expanded=not events):
+        event_editor(events,zone)
     if not events: return
     st.divider()
     selected=st.selectbox('Open an event',events,format_func=lambda e:f'{e.day} · {e.person} · {e.event_type}',key='open_event')
@@ -161,7 +183,7 @@ def events_view(chart,zone,orb,events):
     if not selected.clock:
         st.warning('Exact time unknown: this is a local-noon reference snapshot, not an exact event time. PD and fast-moving contacts can change during the day. Repetitions from this event are provisional.')
     try:
-        show_result(analyze_event(chart,selected,orb),selected.timezone)
+        show_result(analyze_event(chart,selected,orb),selected.timezone,advanced)
     except ERRORS as e: st.error(str(e))
 
 
@@ -177,6 +199,7 @@ def comparison(chart,orb,events):
     for event,(_,result) in zip(selected,results):
         summaries[f'{event.day} · {event.person} · {event.id[:8]}']={
             'Type':event.custom_type if event.event_type=='custom' else event.event_type,
+            'Outcome / comparison group':event.outcome_label,
             'Time':event.clock or 'Noon assumed', 'Timezone':event.timezone,
             'MD / AD / PD':' / '.join(p['lord'] for p in result['dashas']),
             **{c:v['score'] for c,v in result['scores'].items()}}
@@ -273,19 +296,14 @@ def render_relationships(chart,place):
     st.info('Events and profiles are stored only in this browser session. Export a backup before closing or rebooting the app. No account or shared database is used.')
     key='relationship_workspace_'+chart_key(chart)
     workspace=st.session_state.setdefault(key,{'events':[],'profiles':[]})
-    orb=st.number_input('Close-contact orb (degrees)',min_value=0.0,max_value=10.0,value=3.0,step=0.5,key='relationship_orb')
-    with st.expander('Calculation methods and scoring rules'):
+    main = st.container()
+    with st.expander('Advanced calculations'):
+        orb=st.number_input('Close-contact orb (degrees)',min_value=0.0,max_value=10.0,value=3.0,step=0.5,key='relationship_orb')
+        details = st.container()
+        st.markdown('**Calculation methods and scoring rules**')
         st.json(RULES)
-        st.caption('Default birth-chart ayanamsha is Lahiri. This workspace inherits your selected natal ayanamsha. All positions and periods are calculated in Python; no LLM calculations are used.')
-    section=st.selectbox('Relationship workspace',('Date snapshot','MD / AD / PD hierarchy','Events','Compare events','Future windows','Natal synastry'),key='relationship_section')
-    if section=='Date snapshot': lookup(chart,place.timezone,orb)
-    elif section=='MD / AD / PD hierarchy': hierarchy(chart,place.timezone)
-    elif section=='Events': events_view(chart,place.timezone,orb,workspace['events'])
-    elif section=='Compare events': comparison(chart,orb,workspace['events'])
-    elif section=='Future windows': future_view(chart,orb)
-    elif section=='Natal synastry': profiles_view(chart,workspace['profiles'],orb)
-    st.divider()
-    with st.expander('Export / restore events and profiles'):
+        st.caption('This workspace inherits your selected natal ayanamsha. All positions and periods are calculated in Python.')
+        st.markdown('**Export / restore events and profiles**')
         st.download_button('Export private backup',dump_records(chart,workspace['events'],workspace['profiles']),
                            'relationship-backup.json','application/json')
         uploaded=st.file_uploader('Restore a backup for this birth chart (replaces session records)',type=['json'])
@@ -295,3 +313,12 @@ def render_relationships(chart,place):
                 workspace['events'],workspace['profiles']=events,profiles
                 st.success('Backup restored.'); st.rerun()
             except ERRORS as e: st.error(str(e))
+
+    with main:
+        section=st.selectbox('Relationship workspace',('Date snapshot','MD / AD / PD hierarchy','Events','Compare events','Future windows','Natal synastry'),key='relationship_section')
+        if section=='Date snapshot': lookup(chart,place.timezone,orb,details)
+        elif section=='MD / AD / PD hierarchy': hierarchy(chart,place.timezone)
+        elif section=='Events': events_view(chart,place.timezone,orb,workspace['events'],details)
+        elif section=='Compare events': comparison(chart,orb,workspace['events'])
+        elif section=='Future windows': future_view(chart,orb)
+        elif section=='Natal synastry': profiles_view(chart,workspace['profiles'],orb)

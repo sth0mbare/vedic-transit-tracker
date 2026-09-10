@@ -12,6 +12,10 @@ EVENT_TYPES = ('first met', 'first date', 'relationship began', 'sexual/romantic
                'commitment/exclusivity', 'engagement', 'marriage', 'breakup', 'final contact', 'custom')
 
 
+OUTCOME_LABELS = ('Unclassified / still unfolding', 'Short-lived date',
+                  'First contact that went nowhere', 'Casual encounter',
+                  'Long-term relationship start')
+
 def local_instant(day, clock, zone, fold=None):
     """Resolve wall time; reject DST gaps, require an explicit choice for repeats."""
     if clock.tzinfo is not None:
@@ -44,6 +48,8 @@ class RelationshipEvent:
     notes: str = ''
     custom_type: str = ''
     fold: int | None = None
+
+    outcome_label: str = OUTCOME_LABELS[0]
 
     def instant(self):
         return local_instant(date.fromisoformat(self.day),
@@ -98,6 +104,8 @@ def load_records(payload, chart):
                 raise ValueError('Invalid event')
             if e.event_type=='custom' and not e.custom_type.strip():
                 raise ValueError('Custom events need a type label')
+            if e.outcome_label not in OUTCOME_LABELS:
+                raise ValueError('Invalid event outcome label')
             e.instant()
         for p in profiles:
             if not p.label.strip() or len(p.label)>200 or type(p.reliable_time) is not bool:

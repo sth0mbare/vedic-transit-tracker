@@ -59,3 +59,28 @@ A stacking flag requires at least three eligible families, a dasha family and a 
 `relationship_records.py`: event/profile schemas, timezone validation and backup validation.
 `synastry.py`: natal comparison with explicit unknown-time handling.
 `relationship_ui.py`: Streamlit workspace; `app.py` adds one sidebar entry.
+
+### Event summaries and optional comparison labels
+
+The event/date snapshot defaults to a local-date heading, three activation labels,
+a maximum of six explanations drawn from existing evidence, and the MD → AD → PD
+chain. Exact period dates expand on click. Counted evidence is listed before
+supporting context; repeated descriptions of the same contact are deduplicated.
+When fewer indicators exist, the interface does not invent additional explanations.
+
+Display bands use the unchanged raw family count: Low = 0–1, Moderate = 2–3,
+High = 4–6. They are descriptive UI bands, not probabilities, source-matching
+counts, or the existing window qualification flag. A low score does not exclude
+a meaningful event. The scoring engine and window thresholds are unchanged.
+
+Advanced calculations retains the transit snapshot, raw counts, matching/stacking
+fields, every activation, degree contacts and whole-sign aspects, D1/D9/DK/UL,
+full JSON record and download, orb setting, rules, and backup export/restore.
+
+Events optionally store `outcome_label`: unclassified/still unfolding, short-lived
+date, first contact that went nowhere, casual encounter, or long-term relationship
+start. These are manually selected comparison metadata, never scoring inputs.
+The comparison table includes the label alongside unchanged scores, so transient
+and lasting experiences can be compared without fitting the rules to outcomes.
+Version-1 backups remain readable; older events default to unclassified. New
+backups preserve the optional label. No known real-life event is hardcoded.
