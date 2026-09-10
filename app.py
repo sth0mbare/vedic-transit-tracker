@@ -375,9 +375,24 @@ if chart:
         "Current Dasha": lambda: _render_current_dasha(chart),
         "Sun & Venus Mahadasha": lambda: _render_mahadasha(chart),
     }
+    if st.session_state.get("selected_chart_view") not in views:
+        st.session_state["selected_chart_view"] = next(iter(views))
+
+    def select_view(view):
+        st.session_state["selected_chart_view"] = view
+
+    selected_view = st.session_state["selected_chart_view"]
     with st.sidebar:
         st.subheader("Charts & Calculators")
-        selected_view = st.radio("Choose a view", list(views), key="selected_chart_view", label_visibility="collapsed")
+        for view in views:
+            st.button(
+                view,
+                key=f"nav_{view}",
+                type="primary" if view == selected_view else "secondary",
+                use_container_width=True,
+                on_click=select_view,
+                args=(view,),
+            )
     st.subheader(selected_view)
     views[selected_view]()
 
