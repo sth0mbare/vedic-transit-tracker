@@ -328,7 +328,7 @@ def _render_current_dasha(chart) -> None:
         margin=dict(l=0, r=0, t=10, b=0),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#1F2A37", family="Inter, sans-serif"),
+        font=dict(color="#1F2A37", family="Source Sans 3, sans-serif"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, title=None),
     )
     st.plotly_chart(fig, use_container_width=True)
