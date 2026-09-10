@@ -59,6 +59,10 @@ pytest tests/
 - Rahu is computed as the mean lunar node; Ketu is derived as Rahu + 180°.
 - Dasha and Sade Sati durations use a 365.2425-day solar year approximation.
 
-## Relationship workspace
+## Preserved calculation code
 
-The **Relationships** sidebar view adds MD/AD/PD lookup, historical and future snapshots, session-only event records with export/import, repeated-signature comparison, sampled future windows, and natal synastry. See [methods, scoring rules and limitations](docs/relationship-workspace.md).
+Relationship product pages have been removed from the Streamlit app. Legacy relationship
+calculation modules and frozen `relationship_timing_v2_0` remain dormant for reference
+and to preserve reusable aspects, lordships, Upapada Lagna and Darakaraka calculations.
+No visible page imports or runs relationship analysis. Historical methodology documents
+remain archival and do not describe current navigation.

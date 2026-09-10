@@ -5,7 +5,6 @@ import pytest
 from vedic_astro.chart import compute_natal_chart
 from vedic_astro.relationships import analyze
 from vedic_astro.transits import transit_houses, compute_transits
-from relationship_consumer import top_reasons
 
 @pytest.mark.parametrize('moon_sign',range(12))
 def test_shared_house_references_all_signs(moon_sign):
@@ -29,7 +28,6 @@ def test_occupancy_is_moon_only_and_secondary_cannot_count(monkeypatch):
     assert all(f['target']=='house5' and 'Moon / Chandra Lagna' in f['detail'] for f in houses)
     assert all(not f['score_eligible'] for f in r['activations'] if f['family']=='house_lagna')
     assert all(t['house_from_moon']==5 and t['house_from_lagna']==2 for t in r['transits'])
-    assert any('Moon / Chandra Lagna' in t for t in top_reasons(r))
     # Same longitude in H5 from Lagna, H8 from Moon must not earn an occupancy point.
     for v in raw.values():v.longitude=195
     r=analyze(chart,datetime(2026,10,9,3,tzinfo=timezone.utc))

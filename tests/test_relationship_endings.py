@@ -11,7 +11,6 @@ from types import SimpleNamespace
 import pytest
 
 from tests.test_navamsa import synthetic_chart
-from tests.test_relationship_ui import workspace, choose
 from vedic_astro.chart import compute_natal_chart
 from vedic_astro.relationship_records import RelationshipEvent
 from vedic_astro.relationships import (analyze, analyze_event, indicators, contact_rows,
@@ -176,18 +175,6 @@ def test_no_extra_ephemeris_calls_or_outcome_dependency(monkeypatch):
         other=analyze_event(chart,replace(event,event_type=label,notes='Known ending',outcome_label='Long-term relationship start'))
         assert first['scores']==other['scores'] and first['activations']==other['activations']
     assert chart==before
-
-
-def test_visible_version_category_and_counted_context():
-    app,chart,key=workspace()
-    next(b for b in app.button if b.label=='Inspect date').click().run()
-    assert not app.exception
-    assert any(RULE_VERSION in c.value for c in app.caption)
-    assert any('Ending pressure' in m.value for m in app.markdown)
-    advanced=next(e for e in app.expander if e.label=='View astrology details')
-    assert any('Ending / separation — counted indicators' in m.value for m in advanced.markdown)
-    assert any('Ending / separation — supporting context' in m.value for m in advanced.markdown)
-    assert app.session_state['chart']==chart
 
 
 def test_frozen_v1_1_source_manifest():
