@@ -54,13 +54,13 @@ def test_summary_and_audit_ui_are_separate():
     app.session_state[key]['events'] = [RelationshipEvent('e','Example','custom','2020-08-14','23:30','America/Los_Angeles',custom_type='First contact')]
     choose(app,'Events')
     assert any(h.value=='August 14, 2020 — First contact' for h in app.subheader)
-    advanced = next(e for e in app.expander if e.label=='Advanced calculations')
+    advanced = next(e for e in app.expander if e.label=='View astrology details')
     assert not advanced.proto.expanded
     assert len(advanced.json) >= 4
     assert any('Score (0–6)' in t.value.columns for t in advanced.dataframe)
     assert len(advanced.get('download_button')) == 2
-    assert any('Meeting / attraction:' in m.value for m in app.markdown)
-    assert next(e for e in app.expander if e.label=='Exact dasha dates').dataframe
+    assert any('Romance / attraction' in m.value for m in app.markdown)
+    assert len(advanced.dataframe[0].value)==3
     # Outcome can be saved without changing the natal chart or score source.
     next(s for s in app.selectbox if s.label=='Add or edit an event').select('e').run()
     next(s for s in app.selectbox if s.label=='Outcome / comparison group (optional)').select('Long-term relationship start')

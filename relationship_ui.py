@@ -2,6 +2,7 @@
 from dataclasses import asdict
 from datetime import date, datetime, time, timedelta, timezone
 import json
+from html import escape
 from uuid import uuid4
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -9,7 +10,8 @@ import pandas as pd
 import streamlit as st
 
 from styling import card
-from relationship_presentation import CATEGORY_LABELS, activation_level, result_heading, dasha_chain, standout_indicators
+from relationship_presentation import result_heading
+from relationship_consumer import dimension_cards, moment_summary, top_reasons
 from vedic_astro.dasha import DAYS_PER_YEAR
 from vedic_astro.timing import birth_cycle, birth_balance, dasha_at, hierarchy_for_md, mahadasha_at
 from vedic_astro.relationships import analyze, analyze_event, indicators, repeated_signatures, scan_windows, RULES, RULE_VERSION
@@ -52,26 +54,28 @@ def show_result(result, zone, advanced):
     st.subheader(result_heading(result, zone))
     if result.get('event'):
         st.caption(result['event']['person'])
-    st.markdown('**Relationship activation summary**')
-    for c, value in result['scores'].items():
-        st.markdown(f"**{CATEGORY_LABELS.get(c, c.capitalize())}: {activation_level(value['score'])}**")
-    st.caption('Low: 0–1 counted indicator groups; Moderate: 2–3; High: 4–6. '
-               'These describe how many kinds of indicators this rule set recognizes—not likelihood, '
-               'compatibility, or relationship length. A low score does not rule out a meaningful event.')
-    st.caption('Ending / separation counts only different families backed by different planets. '
-               'Supporting context adds no points. It can indicate pressure or restructuring, not necessarily a breakup.')
-    with st.expander('Why this date stands out', expanded=True):
-        st.caption('Counted indicators appear first, followed by supporting context. '
-                   'These highlights are not additional points or predictions.')
-        for explanation in standout_indicators(result):
+    st.markdown('**What was this moment about?**')
+    st.write(moment_summary(result))
+    cards = dimension_cards(result)
+    for start in (0, 2):
+        for column, (label, level, explanation) in zip(st.columns(2), cards[start:start+2]):
+            with column:
+                card(escape(label), escape(level),
+                     '<p style="margin:0.5rem 0 0;line-height:1.5">' + escape(explanation) + '</p>')
+    st.caption('An interpretation of astrological indicators, not a prediction of what happened or what comes next.')
+    st.markdown('**Why this date stands out**')
+    reasons = top_reasons(result)
+    if reasons:
+        for explanation in reasons:
             st.markdown('- ' + explanation)
-    st.markdown('**Active dasha**')
-    st.write(dasha_chain(result) or 'Unavailable before birth')
-    with st.expander('Exact dasha dates'):
-        table(period_rows(result['dashas'],zone))
+    else:
+        st.caption('No qualifying highlights were found for this moment.')
     if not result['dashas']:
-        st.info('This date precedes birth. Transits are shown, but personal dashas are unavailable.')
+        st.caption('Personal planetary periods are unavailable before birth.')
     with advanced:
+        st.markdown('**Active MD / AD / PD — exact dates**')
+        table(period_rows(result['dashas'],zone))
+        st.caption('Display bands: Low 0–1, Moderate 2–3, High 4–6. These are descriptive counts, not probabilities.')
         st.caption(f"Moment: {datetime.fromisoformat(result['at_utc']).astimezone(ZoneInfo(zone)).isoformat()} · UTC: {result['at_utc']} · {result['ayanamsa']}")
         st.markdown('**Sidereal transit snapshot**')
         table([{**r,'sign':rashi_display_name(r['sign'])} for r in result['transits']])
@@ -193,11 +197,14 @@ def events_view(chart,zone,orb,events,advanced):
     if not events: return
     st.divider()
     selected=st.selectbox('Open an event',events,format_func=lambda e:f'{e.day} · {e.person} · {e.event_type}',key='open_event')
-    st.write(selected.notes)
     if not selected.clock:
-        st.warning('Exact time unknown: this is a local-noon reference snapshot, not an exact event time. PD and fast-moving contacts can change during the day. Repetitions from this event are provisional.')
+        st.caption('Time unknown: this reading uses noon in the saved timezone and may change with the exact time.')
     try:
         show_result(analyze_event(chart,selected,orb),selected.timezone,advanced)
+        if selected.notes:
+            with advanced:
+                st.markdown('**Event notes**')
+                st.write(selected.notes)
     except ERRORS as e: st.error(str(e))
 
 
@@ -311,11 +318,11 @@ def profiles_view(chart,profiles,orb):
 def render_relationships(chart,place):
     st.caption('Relationship Timing & Retrospective · indicators, not promises')
     st.caption(RULE_VERSION + ' · frozen')
-    st.info('Events and profiles are stored only in this browser session. Export a backup before closing or rebooting the app. No account or shared database is used.')
+    st.caption('Your events stay in this session. Keep a backup using View astrology details.')
     key='relationship_workspace_'+chart_key(chart)
     workspace=st.session_state.setdefault(key,{'events':[],'profiles':[]})
     main = st.container()
-    with st.expander('Advanced calculations'):
+    with st.expander('View astrology details'):
         orb=st.number_input('Close-contact orb (degrees)',min_value=0.0,max_value=10.0,value=3.0,step=0.5,key='relationship_orb')
         details = st.container()
         st.markdown('**Calculation methods and scoring rules**')

@@ -180,8 +180,8 @@ def test_visible_version_category_and_counted_context():
     next(b for b in app.button if b.label=='Inspect date').click().run()
     assert not app.exception
     assert any(RULE_VERSION in c.value for c in app.caption)
-    assert any('Ending / separation:' in m.value for m in app.markdown)
-    advanced=next(e for e in app.expander if e.label=='Advanced calculations')
+    assert any('Ending pressure' in m.value for m in app.markdown)
+    advanced=next(e for e in app.expander if e.label=='View astrology details')
     assert any('Ending / separation — counted indicators' in m.value for m in advanced.markdown)
     assert any('Ending / separation — supporting context' in m.value for m in advanced.markdown)
     assert app.session_state['chart']==chart
