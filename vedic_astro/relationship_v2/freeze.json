@@ -1,0 +1,104 @@
+{
+  "version": "relationship_timing_v2_0",
+  "parameters": {
+    "degree_orb": 3.0,
+    "degree_contacts": "diagnostic_only",
+    "transit_house_reference": "Moon / Chandra Lagna",
+    "natal_reference": "D1 Ascendant",
+    "d9_reference": "natal D9 Lagna",
+    "node_graha_drishti": false,
+    "node_rashi_drishti": false,
+    "projected_transit_d9": false,
+    "vedha_blockers": "seven_classical",
+    "structural_actor_minimum": 2,
+    "ingress_bracket_seconds": 3600,
+    "boundary_precision_seconds": 1,
+    "window_minimum_duration": null,
+    "gap_filling": false,
+    "weights": null,
+    "probability_calibration": null
+  },
+  "source_classifications": {
+    "natal": {
+      "classification": "traditional + interpretive/engineering eligibility",
+      "source": "https://www.wisdomlib.org/hinduism/book/phaladeepika-by-mantreswara-text-and-translation/d/doc1621582.html"
+    },
+    "climate": {
+      "classification": "traditional pairs; seven-classical blocker choice",
+      "source": "https://www.wisdomlib.org/hinduism/book/phaladeepika-by-mantreswara-text-and-translation/d/doc1621598.html"
+    },
+    "ul_dk": {
+      "classification": "school-specific Jaimini + engineering transit restrictions",
+      "source": "https://lakshminarayanlenasia.com/articles/JAIMINISUTRAS.pdf"
+    },
+    "d9": {
+      "classification": "school-specific natal corroboration"
+    },
+    "period": {
+      "classification": "traditional Vimshottari + engineered role gates"
+    },
+    "structural": {
+      "classification": "school-specific natal-target transits + engineering climate qualification"
+    },
+    "trigger": {
+      "classification": "interpretive + engineering timing restrictions"
+    },
+    "diagnostic": {
+      "classification": "engineering; no gate eligibility"
+    },
+    "assessment": {
+      "classification": "engineering Boolean gates; no statistical probabilities"
+    }
+  },
+  "base_git_commit": "d1b857e9f3019390cfbf53de7e8a4108d5d5426e",
+  "implementation_commit": null,
+  "implementation_files": {
+    "vedic_astro/relationship_v2/__init__.py": "3fb5f09e8d12c78ac3492db72024cf970817fc118307cd593ebd2314ee5f54a1",
+    "vedic_astro/relationship_v2/assessment.py": "16f50685c970fb24b078a8fa09b1ae8c903762de31dc98193ff2fd7a055de507",
+    "vedic_astro/relationship_v2/climate.py": "c5a22faaa0c90280acd4dd47f93fa0280d797e9c11cfcf20337b75b16888c177",
+    "vedic_astro/relationship_v2/debug.py": "cdf8261e2af17bf83cd049ca05fcbb0adde260bab8e88261fecac4b21f551e2e",
+    "vedic_astro/relationship_v2/engine.py": "cd181afed4c68cc25e18742e10e061e17ae88878c927a9d8cacda3edc6a1c6ad",
+    "vedic_astro/relationship_v2/evidence.py": "d18ab4ffc10f673cd8497cb50d52a6cb03507aa159685782138e5197f09eb877",
+    "vedic_astro/relationship_v2/geometry.py": "7e27314063f1659794ea642666eee6910100f061c42d3ca1d8de44e1c9efa371",
+    "vedic_astro/relationship_v2/natal.py": "973e39c5f1fb45c8f7915666e494ec2ee5a2d2602780e7b948ffabf3780efdf7",
+    "vedic_astro/relationship_v2/periods.py": "d8be796d2e044904be8041c69693425aa037ea7e112eda6c620750d91810a4fa",
+    "vedic_astro/relationship_v2/provenance.py": "500851b021443785d2b013544cc36e6164e55bd29f18bed82998a891c6cfc03c",
+    "vedic_astro/relationship_v2/spec.py": "fb3eb0b424356cdaeaa39bab984afc4caeeed505de7f491275acc45b736f1375",
+    "vedic_astro/relationship_v2/transits.py": "bb4f527028fc3d5a71cb6f3cf68218fd5b1049c2c50aed702aebe0f26ad54ad9",
+    "vedic_astro/relationship_v2/windows.py": "9823a6c368177526812752c6368ba2328a42aa20e9b0d3885ea39a458963b02c"
+  },
+  "implementation_sha256": "1ce3aeac2041a8b9ec58e9e9ef2c2753075b5b17a49345d1ab3497a543c307b4",
+  "methodology_sha256": "e32b93aa13d7dbcaf29b453071d751b4424dee801a478081ecbd11466e6e12f8",
+  "files": {
+    "vedic_astro/relationship_v2/__init__.py": "3fb5f09e8d12c78ac3492db72024cf970817fc118307cd593ebd2314ee5f54a1",
+    "vedic_astro/relationship_v2/assessment.py": "16f50685c970fb24b078a8fa09b1ae8c903762de31dc98193ff2fd7a055de507",
+    "vedic_astro/relationship_v2/climate.py": "c5a22faaa0c90280acd4dd47f93fa0280d797e9c11cfcf20337b75b16888c177",
+    "vedic_astro/relationship_v2/debug.py": "cdf8261e2af17bf83cd049ca05fcbb0adde260bab8e88261fecac4b21f551e2e",
+    "vedic_astro/relationship_v2/engine.py": "cd181afed4c68cc25e18742e10e061e17ae88878c927a9d8cacda3edc6a1c6ad",
+    "vedic_astro/relationship_v2/evidence.py": "d18ab4ffc10f673cd8497cb50d52a6cb03507aa159685782138e5197f09eb877",
+    "vedic_astro/relationship_v2/geometry.py": "7e27314063f1659794ea642666eee6910100f061c42d3ca1d8de44e1c9efa371",
+    "vedic_astro/relationship_v2/natal.py": "973e39c5f1fb45c8f7915666e494ec2ee5a2d2602780e7b948ffabf3780efdf7",
+    "vedic_astro/relationship_v2/periods.py": "d8be796d2e044904be8041c69693425aa037ea7e112eda6c620750d91810a4fa",
+    "vedic_astro/relationship_v2/provenance.py": "500851b021443785d2b013544cc36e6164e55bd29f18bed82998a891c6cfc03c",
+    "vedic_astro/relationship_v2/spec.py": "fb3eb0b424356cdaeaa39bab984afc4caeeed505de7f491275acc45b736f1375",
+    "vedic_astro/relationship_v2/transits.py": "bb4f527028fc3d5a71cb6f3cf68218fd5b1049c2c50aed702aebe0f26ad54ad9",
+    "vedic_astro/relationship_v2/windows.py": "9823a6c368177526812752c6368ba2328a42aa20e9b0d3885ea39a458963b02c",
+    "docs/relationship-timing-v2.md": "90a6c515e2dc8a45c24b7264ceaafe72aa3a0edc267d7d66c61fa0a7af673bd8",
+    "docs/relationship-v2-implementation-decisions.md": "253aa710a1e52400ab0e068a918b8b5e28fa48f0b485139bc58b23a1020c6893",
+    "vedic_astro/chart.py": "9ae2fdbe29b11345b0561e12c0199ab6e1c4796b09b626ff84c3c9f7d285e1e1",
+    "vedic_astro/constants.py": "d4abc8506f6104829b798cd73e9201024bf158992c5a19788d1cf218331da70f",
+    "vedic_astro/ephemeris.py": "067646ab671490b02cdecadd501ba7509b029bae77c9fef9941ca8be5d9c7aab",
+    "vedic_astro/navamsa.py": "dfcc7e3e439d5932975c9ed08c0dc55fab267d9abbe9bd039afe53a07271318f",
+    "vedic_astro/util.py": "edc7bcecd870ad1db089d85bc7c3296e1c6bb9b78faad40c3ca23ebe507ee7af",
+    "vedic_astro/timing.py": "20f45d4dbdfc3e4224a81c907e33c9e1d66d85983f7ceb7eeded80000fb64806",
+    "vedic_astro/dasha.py": "6afa92b4807a41add3eaf40eb4ee5770815a195abd5ddf147e09616155e75df0",
+    "vedic_astro/transits.py": "2df8df5cb5087f01a4f413964511d54dde53548fffc2cb81191c275d6a55e825",
+    "vedic_astro/relationships.py": "bfba283b52c509614d0a18cdb2a4735002d8754f3c27a0908d1210d6c5e31249",
+    "vedic_astro/relationship_endings.py": "e68e407ba57a98eac561dbef7dab0d37dc4fa73e8be923bc074d99e12cfb3dc5",
+    "tests/test_relationship_v2.py": "251661e6330141438ff445a7c8757174ed5da1bbbd2240bacd5a8a7b90ed7864",
+    "tests/test_relationship_v2_freeze.py": "15dfb1cd6e88079ef9059a28410078b00dc3a09acb3b2186c78ea421e6dbdd0f",
+    "tests/test_relationship_v2_preservation.py": "63364bfa9198b6de4309b0e66f882463e1219bab5e43dcfb9662b718e37103bf",
+    "tests/fixtures/relationship_v1_1_synthetic_preservation.json": "26cb170497b4dbcb38af46b561cebc4328c923bec1618265ce3f2ca3b428513b"
+  },
+  "validation_scope": "Synthetic methodology only; no personal events or astronomical future scan."
+}

@@ -51,7 +51,7 @@ def top_reasons(result):
         elif kind.startswith('house') or kind == 'occupancy':
             house = int((kind if ending else fact['target']).removeprefix('house'))
             meaning = {1:'self and identity',5:'romance',6:'conflict and obligations',7:'partnership',8:'shared resources and change',12:'release and withdrawal'}.get(house,'relationships')
-            key, text = ('house',source,house), f'{source} was transiting your natal house {house}, associated with {meaning}.'
+            key, text = ('house',source,house), f'{source} was transiting house {house} from Moon / Chandra Lagna, associated with {meaning}.'
         elif family == 'd9':
             if ending:
                 sign = kind.split(':',1)[1]

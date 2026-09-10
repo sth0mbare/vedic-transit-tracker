@@ -1,0 +1,12 @@
+{
+  "version": "Relationship Timing Rules v1.1",
+  "files": {
+    "vedic_astro/relationships.py": "bfba283b52c509614d0a18cdb2a4735002d8754f3c27a0908d1210d6c5e31249",
+    "vedic_astro/relationship_endings.py": "e68e407ba57a98eac561dbef7dab0d37dc4fa73e8be923bc074d99e12cfb3dc5",
+    "vedic_astro/timing.py": "20f45d4dbdfc3e4224a81c907e33c9e1d66d85983f7ceb7eeded80000fb64806",
+    "relationship_presentation.py": "85f1117c88a8b8c3fd48bec4a3bbf512b598124ba6fa3d818b2d00df44116543",
+    "vedic_astro/transits.py": "2df8df5cb5087f01a4f413964511d54dde53548fffc2cb81191c275d6a55e825",
+    "relationship_consumer.py": "57d338b3a544c29cfa5e9e69e9a9682c67734c8f2d383af01cbd37535bc27912",
+    "relationship_ui.py": "5795327bb5911b6a1ea44f725d6c402e950f957fa603cadc69510ab3f54170e4"
+  }
+}

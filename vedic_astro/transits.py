@@ -127,6 +127,14 @@ class GuruGocharStatus:
     next_transition: datetime | None  # approx. date Jupiter next crosses a sign boundary
 
 
+def transit_houses(natal_chart: NatalChart, longitude: float) -> dict[str, int]:
+    """Shared whole-sign transit references; never changes the natal chart."""
+    return {
+        'house_from_moon': house_from_sign(longitude, natal_chart.planets[MOON].longitude),
+        'house_from_lagna': house_from_sign(longitude, natal_chart.ascendant_longitude),
+    }
+
+
 def compute_transits(
     natal_chart: NatalChart,
     at_dt: datetime | None = None,
@@ -137,9 +145,6 @@ def compute_transits(
     """
     if at_dt is None:
         at_dt = datetime.now(timezone.utc)
-
-    moon_longitude = natal_chart.planets[MOON].longitude
-    lagna_longitude = natal_chart.ascendant_longitude
 
     raw_positions = get_planet_positions(at_dt, ayanamsa_name)
     sun_longitude = raw_positions[SUN].longitude
@@ -157,8 +162,7 @@ def compute_transits(
             name=name,
             longitude=pos.longitude,
             rashi=rashi_name(pos.longitude),
-            house_from_moon=house_from_sign(pos.longitude, moon_longitude),
-            house_from_lagna=house_from_sign(pos.longitude, lagna_longitude),
+            **transit_houses(natal_chart, pos.longitude),
             retrograde=pos.retrograde,
             separation_from_sun_degrees=separation,
             combust=combust,

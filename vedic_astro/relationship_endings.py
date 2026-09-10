@@ -1,7 +1,7 @@
-"""Frozen v1.0 ending/separation heuristics, independent of event labels/outcomes.
+"""Versioned ending/separation heuristics, independent of event labels/outcomes.
 
 Consumes already calculated positions and periods. No ephemeris calls. See
- docs/relationship-rules-v1.0.md for exact eligibility and counting conventions.
+ docs/relationship-rules-v1.1.md for the occupancy correction; v1.0 for counting.
 """
 from functools import lru_cache
 
@@ -18,7 +18,7 @@ DIFFICULT_HOUSES = (6, 8, 12)
 RULE_SPEC = {
     'dasha': 'Active MD/AD/PD lord must have BOTH a disruption role (Saturn/Ketu/Mars, D1 6/8/12 lord or occupant) AND a partnership role (Venus, D1/D9 seventh lord, DK, UL lord, or D1/D9 seventh-house occupant). Repeated period lords count once.',
     'slow': 'Saturn/Ketu degree conjunction or opposition to natal Venus, D1 seventh lord or Lagna. Whole-sign-only aspects are context.',
-    'house': 'Saturn/Ketu/Mars in D1 house 1 or 7. Occupancy of 6/8/12 counts only with a simultaneous degree contact to natal Venus or D1 seventh lord by the same planet; otherwise context.',
+    'house': 'Saturn/Ketu/Mars in house 1 or 7 from Moon / Chandra Lagna. Occupancy of 6/8/12 counts only with a simultaneous degree contact to natal Venus or D1 seventh lord by the same planet; otherwise context.',
     'd9': 'Saturn/Ketu/Mars projected into the natal D9 seventh-house, seventh-lord or Venus sign. Shared target signs merge. No degree orbs or physical sky aspect claims.',
     'ul_dk': 'Saturn/Ketu/Mars co-occupy UL sign or have a degree conjunction/opposition to DK. Whole-sign-only aspects to UL/DK are context. DK aliases merge with other roles of that planet.',
     'fast': 'Mars degree conjunction/opposition to natal Venus or D1 seventh lord. Moon/Venus degree contacts to those same targets are neutral timing triggers eligible only when both dasha and slow families are eligible. Moon/Venus contacts to natal Ketu/Saturn/Mars and house occupancy are context only.',
@@ -120,12 +120,16 @@ def ending_activations(chart, meta, periods, transits, contacts, sign_lords, asp
                 + ('Degree contact.' if degree else 'Whole-sign connection, not necessarily an exact angle.'), eligible)
 
     for row in transits:
-        p, lon, h = row['planet'], row['longitude'], row['natal_house']
+        p, lon, h = row['planet'], row['longitude'], row['house_from_moon']
         linked = any(c['source']==p and c['target'] in core and c['orb_deviation'] is not None for c in contacts)
         if p in DISRUPTORS + ('Moon','Venus') and h in (1,7,6,8,12):
             add('house',p,f'house{h}',f'house{h}',
-                f'{p} was transiting natal house {h} at {lon:.9f}°; degree link to Venus/seventh lord: {linked}.',
+                f'{p} was transiting house {h} from Moon / Chandra Lagna at {lon:.9f}°; degree link to Venus/seventh lord: {linked}.',
                 p in DISRUPTORS and (h in (1,7) or linked))
+        lagna_house = row['house_from_lagna']
+        if p in DISRUPTORS + ('Moon','Venus') and lagna_house in (1,7,6,8,12):
+            add('house_lagna',p,f'house{lagna_house}',f'house{lagna_house}',
+                f'{p} was transiting house {lagna_house} from D1 Lagna; secondary supporting evidence only.',False)
         if p not in DISRUPTORS:
             continue
         sign = RASHIS[_navamsa_sign_index(lon)]

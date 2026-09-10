@@ -54,6 +54,7 @@ def show_result(result, zone, advanced):
     st.subheader(result_heading(result, zone))
     if result.get('event'):
         st.caption(result['event']['person'])
+    st.caption('Transit occupancy: house from Moon / Chandra Lagna. D1 Lagna occupancy is secondary context; natal D1/D9, UL/DK and dashas retain their normal references.')
     st.markdown('**What was this moment about?**')
     st.write(moment_summary(result))
     cards = dimension_cards(result)
@@ -78,7 +79,10 @@ def show_result(result, zone, advanced):
         st.caption('Display bands: Low 0–1, Moderate 2–3, High 4–6. These are descriptive counts, not probabilities.')
         st.caption(f"Moment: {datetime.fromisoformat(result['at_utc']).astimezone(ZoneInfo(zone)).isoformat()} · UTC: {result['at_utc']} · {result['ayanamsa']}")
         st.markdown('**Sidereal transit snapshot**')
-        table([{**r,'sign':rashi_display_name(r['sign'])} for r in result['transits']])
+        table([{**{k:v for k,v in r.items() if k not in ('natal_house','house_from_moon','house_from_lagna')},
+                'sign':rashi_display_name(r['sign']),
+                'House from Moon / Chandra Lagna':r['house_from_moon'],
+                'House from D1 Lagna (secondary)':r['house_from_lagna']} for r in result['transits']])
         st.markdown('**Relationship indicator counts**')
         st.caption('The original categories count eligible families. Ending / separation counts matched family/planet pairs; redundant candidates remain context.')
         table([{'Category':c,'Score (0–6)':v['score'],

@@ -32,7 +32,8 @@ def test_counted_house_and_d9_never_leak_raw_details():
     ]}
     reasons=top_reasons(result)
     assert len(reasons)==1 and 'Mars' in reasons[0]
-    assert all(term not in reasons[0] for term in ('False','degree link','Moon','house|'))
+    assert 'from Moon / Chandra Lagna' in reasons[0]
+    assert all(term not in reasons[0] for term in ('False','degree link','Moon was','house|'))
 
 
 def test_summary_uses_existing_labels_without_outcomes():

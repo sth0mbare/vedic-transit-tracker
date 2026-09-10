@@ -40,9 +40,10 @@ def standout_indicators(result):
         key = (source, target, kind)
         if family == 'dasha':
             continue
-        if kind == 'occupancy':
+        if kind in ('occupancy', 'occupancy-lagna'):
             house = int(target.removeprefix('house'))
-            text = f'{source} was transiting your natal house {house}, associated with {meanings[house]}.'
+            reference = 'D1 Lagna (secondary context)' if kind == 'occupancy-lagna' else 'Moon / Chandra Lagna'
+            text = f'{source} was transiting house {house} from {reference}, associated with {meanings[house]}.'
         elif kind == 'projected-sign':
             label = {'house7':'7th house of partnership', '7th lord':'7th-house ruler',
                      'Lagna':'Lagna', 'Lagna lord':'Lagna ruler'}.get(target, target)

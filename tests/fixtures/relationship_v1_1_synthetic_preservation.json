@@ -1,0 +1,39 @@
+[
+  {
+    "positions": {},
+    "sha256": "e235374163ac721d8587db336ef3cc4c10f09e97a71e5f732798276a24c6a202"
+  },
+  {
+    "positions": {
+      "Jupiter": 194
+    },
+    "sha256": "8eb152c04f5c3dacd16eab5eeda7504851b2424dd4bc7e95640d7eeacbbb07f8"
+  },
+  {
+    "positions": {
+      "Saturn": 150
+    },
+    "sha256": "3efcd6b78b2795950811175be6c4131cc6b913f396227abf568e2950712c1b43"
+  },
+  {
+    "positions": {
+      "Moon": 10,
+      "Venus": 10
+    },
+    "sha256": "661f3c54c736369c7677015c22392380fec38f60776830f85d05e8323a210987"
+  },
+  {
+    "positions": {
+      "Mars": 194,
+      "Mercury": 345
+    },
+    "sha256": "f290c0cdedb25e85a94d1fab9335665b0cc3b058ba68f5eea18afc33c6d3370c"
+  },
+  {
+    "positions": {
+      "Rahu": 194,
+      "Ketu": 14
+    },
+    "sha256": "d3beebdf41c520c8146b4437a74d63d5a87eeabc6f1529f95a70b1d0c5717a86"
+  }
+]

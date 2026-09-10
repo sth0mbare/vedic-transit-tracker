@@ -92,7 +92,7 @@ def test_dasha_requires_both_roles_and_repeats_do_not_stack():
 
 @pytest.mark.parametrize('house',[1,7,6,8,12])
 def test_axis_and_difficult_house_eligibility(house):
-    row=dict(planet='Mars',longitude=(house-1)*30+1,natal_house=house)
+    row=dict(planet='Mars',longitude=(house-1)*30+1,house_from_moon=house,house_from_lagna=house)
     _,audit,_=run(transits=[row])
     fact=next(r for r in audit if r['family']=='house')
     assert fact['eligible']==(house in (1,7))
@@ -118,7 +118,7 @@ def test_d9_aliases_and_ul_have_no_invented_degree_contacts():
     meta['d9_placements'][meta['d9_seventh_lord']]['rashi']='Mesha'
     meta['d9_placements']['Venus']['rashi']='Mesha'
     meta['ul_sign']='Mesha'
-    s,a,_=run(chart,transits=[dict(planet='Saturn',longitude=0,natal_house=1)],meta=meta)
+    s,a,_=run(chart,transits=[dict(planet='Saturn',longitude=0,house_from_moon=1,house_from_lagna=1)],meta=meta)
     assert len([r for r in a if r['family']=='d9'])==1
     assert any(r['family']=='ul_dk' and r['eligible'] for r in a)
     assert s['score']==1
@@ -148,15 +148,18 @@ def test_moon_venus_triggers_need_background():
     assert all(not r['eligible'] for r in a if r['target']=='Ketu')
 
 
-def test_legacy_results_remain_exactly_unchanged():
+def test_non_occupancy_results_remain_exactly_unchanged():
     chart=compute_natal_chart(datetime(1990,5,15,9,tzinfo=timezone.utc),18.5213738,73.8545071)
-    fixture=json.loads(Path('tests/fixtures/relationship_legacy.json').read_text())
+    fixture=json.loads(Path('tests/fixtures/relationship_pre_moon.json').read_text())
     for old in fixture:
         chart.ayanamsa=old['ayanamsa']
-        result=analyze(chart,datetime.fromisoformat(old['at']))
-        assert {k:v for k,v in result['scores'].items() if k!=CATEGORY}==old['scores']
-        facts=[r for r in result['activations'] if CATEGORY not in r['categories']]
-        assert sha256(json.dumps(facts,sort_keys=True).encode()).hexdigest()==old['activations_sha256']
+        result=json.loads(json.dumps(analyze(chart,datetime.fromisoformat(old['at'])),default=str))
+        for key in ('natal','natal_d1','contacts','dashas','birth_dasha_balance','ending_natal'):
+            assert result[key]==old['result'][key]
+        def retained(r):
+            return [f for f in r['activations'] if CATEGORY not in f['categories']
+                    and f['family']!='house_lagna' and not f['signature'].endswith('|occupancy')]
+        assert retained(result)==retained(old['result'])
 
 
 def test_no_extra_ephemeris_calls_or_outcome_dependency(monkeypatch):
@@ -187,8 +190,8 @@ def test_visible_version_category_and_counted_context():
     assert app.session_state['chart']==chart
 
 
-def test_frozen_v1_0_source_manifest():
-    lock=json.loads(Path('tests/fixtures/relationship_v1_0_lock.json').read_text())
+def test_frozen_v1_1_source_manifest():
+    lock=json.loads(Path('tests/fixtures/relationship_v1_1_lock.json').read_text())
     assert RULE_VERSION==lock['version']
     for path,digest in lock['files'].items():
         assert sha256(Path(path).read_bytes()).hexdigest()==digest, (

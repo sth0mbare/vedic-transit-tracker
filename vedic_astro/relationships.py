@@ -9,6 +9,7 @@ from .relationship_endings import ending_activations, RULE_SPEC as ENDING_RULES
 from .constants import RASHIS
 from .ephemeris import get_planet_positions
 from .navamsa import compute_navamsa_chart, _navamsa_sign_index
+from .transits import transit_houses
 from .timing import birth_balance, dasha_at, utc
 from .util import rashi_index, rashi_name, house_from_sign, angular_separation
 
@@ -18,11 +19,13 @@ REL_HOUSES = (1,5,7,8,11)
 CLASSICAL = ('Sun','Moon','Mars','Mercury','Jupiter','Venus','Saturn')
 ASPECTS = {p: (7,) for p in CLASSICAL}
 ASPECTS.update(Mars=(4,7,8), Jupiter=(5,7,9), Saturn=(3,7,10))
-RULE_VERSION = 'Relationship Timing Rules v1.0'
+RULE_VERSION = 'Relationship Timing Rules v1.1'
 RULES = {
     'version': RULE_VERSION,
     'ending_separation': ENDING_RULES,
-    'houses': 'Whole-sign houses; classical sign lords (Mars for Scorpio, Saturn for Aquarius).',
+    'houses': 'Transit occupancy: house from Moon / Chandra Lagna. House from D1 Lagna is secondary context only. Natal lordships remain D1-based; classical sign lords.',
+    'transit_house_reference': 'Moon / Chandra Lagna',
+    'natal_house_field': 'Legacy natal_house field means house_from_lagna, secondary only; occupancy scoring uses house_from_moon.',
     'darakaraka': 'Lowest unrounded degree within sign among Sun through Saturn; nodes excluded. Exact ties reported together.',
     'upapada': 'Arudha of D1 house 12: repeat sign distance to its lord. If result is 1st/7th from house 12, move 10th from that result.',
     'aspects': 'Whole-sign full graha drishti: 7th for seven classical planets; Mars 4/8, Jupiter 5/9, Saturn 3/10. No node drishti.',
@@ -30,7 +33,7 @@ RULES = {
     'd9': 'Projected transit D9 sign co-occupation with natal D9 points; a divisional rule, not physical sky contact. No degree orbs in D9.',
     'dasha': 'MD/AD/PD from stored birth Moon, 365.2425 days/year; start inclusive, end exclusive.',
     'scoring': 'One point per eligible family (0–6), never per contact. Require dasha plus a slow-planet degree contact, at least 3 families, and a distinct source planet assignable to each of at least 3 families. Future samples must also exceed the preceding 90-day median and meet its 75th percentile. These are declared heuristics, not probabilities.',
-    'eligible': 'Dasha: 5th/7th lord or Venus/Jupiter. House: Jupiter/Saturn occupying 5/7. Slow: Jupiter/Saturn degree contact to 5th/7th lord, Venus/Jupiter. Fast: Venus/Mars degree contact to those points. D9: Jupiter/Saturn projected into D9 seventh sign or seventh lord sign. UL/DK: Jupiter/Saturn co-occupying UL sign, or degree contact to Darakaraka. Other facts are context only.',
+    'eligible': 'Dasha: 5th/7th lord or Venus/Jupiter. House: Jupiter/Saturn occupying 5/7. Slow: Jupiter/Saturn degree contact to 5th/7th lord, Venus/Jupiter. Fast: Venus/Mars degree contact to those points. D9: Jupiter/Saturn projected into D9 seventh sign or seventh lord sign. UL/DK: Jupiter/Saturn co-occupying UL sign, or degree contact from ANY transit graha to Darakaraka (retained v1.0 executable behavior). Other facts are context only.',
     'categories': 'Meeting/dating targets: house5, house11, Venus, Mars. Formation: these plus house7, Jupiter, UL, Darakaraka. Commitment: house7, Jupiter, UL, Darakaraka. D9 seventh lord is treated as house7. House1/8 and Moon/nodes are displayed as context only.',
     'sampling': 'Future scan is daily at the chosen UTC time. At least two consecutive qualifying samples form a window; isolated samples are reported separately. Intraday crossings and short windows may be missed; endpoints are samples, not exact ingress times.',
 }
@@ -144,10 +147,14 @@ def analyze(chart, at, orb=3.0):
     targets={p:v.longitude for p,v in chart.planets.items()}
     targets['Lagna']=chart.ascendant_longitude
     contacts=contact_rows(sources,targets,orb)
-    transit_rows=[{'planet':p,'longitude':v.longitude,'sign':rashi_name(v.longitude),
-                   'degree_in_sign':v.longitude%30,
-                   'natal_house':house_from_sign(v.longitude,chart.ascendant_longitude),
-                   'retrograde':v.retrograde,'speed_deg_day':v.speed} for p,v in positions.items()]
+    transit_rows=[]
+    for p,v in positions.items():
+        houses=transit_houses(chart,v.longitude)
+        transit_rows.append({'planet':p,'longitude':v.longitude,'sign':rashi_name(v.longitude),
+                             'degree_in_sign':v.longitude%30,
+                             # Compatibility alias only; scoring reads explicit Moon houses.
+                             'natal_house':houses['house_from_lagna'], **houses,
+                             'retrograde':v.retrograde,'speed_deg_day':v.speed})
     facts={}
     def add(family,source,target,kind,detail,eligible=False):
         key=f'{family}|{source}|{target}|{kind}'
@@ -165,9 +172,12 @@ def analyze(chart, at, orb=3.0):
         for role in roles:
             add('dasha',p,role,period.level, f'{period.level} {p}: {period.start.isoformat()} to {period.end.isoformat()}; D1 role {role}', role in ('house5','house7','Venus','Jupiter'))
     for row in transit_rows:
-        if row['natal_house'] in REL_HOUSES:
-            h=row['natal_house']
-            add('house',row['planet'],f'house{h}','occupancy',f"{row['longitude']:.9f}° in natal house {h}", h in (5,7) and row['planet'] in ('Jupiter','Saturn'))
+        h=row['house_from_moon']
+        if h in REL_HOUSES:
+            add('house',row['planet'],f'house{h}','occupancy',f"{row['longitude']:.9f}° in house {h} from Moon / Chandra Lagna", h in (5,7) and row['planet'] in ('Jupiter','Saturn'))
+        h=row['house_from_lagna']
+        if h in REL_HOUSES:
+            add('house_lagna',row['planet'],f'house{h}','occupancy-lagna',f"{row['longitude']:.9f}° in house {h} from D1 Lagna; secondary supporting evidence only")
     for c in contacts:
         p,t=c['source'],c['target']
         roles=[f'house{h}' for h,l in meta['d1_lords'].items() if l==t]
